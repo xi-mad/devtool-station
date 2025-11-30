@@ -15,6 +15,7 @@ export enum ToolId {
   SQL_FORMATTER = 'sql-formatter',
   RANDOM_STRING = 'random-string',
   UNICODE_CONVERTER = 'unicode-converter',
+  FULLSCREEN_COLOR = 'fullscreen-color',
 }
 
 export interface ToolDefinition {
