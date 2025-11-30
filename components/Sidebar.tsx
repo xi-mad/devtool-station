@@ -12,7 +12,8 @@ import {
   Zap,
   Shield,
   Hash,
-  Database
+  Database,
+  Languages
 } from 'lucide-react';
 
 // We keep the TOOLS array here for now as a central config, even if Sidebar component is deprecated/removed in usage.
@@ -30,6 +31,7 @@ export const TOOLS: ToolDefinition[] = [
   { id: ToolId.COLOR_PALETTE, name: 'Color Tools', description: 'Hex, RGB, Picker', icon: Palette, category: 'Generator' },
   { id: ToolId.UUID_GENERATOR, name: 'UUID Generator', description: 'Generate Unique IDs', icon: Fingerprint, category: 'Generator' },
   { id: ToolId.RANDOM_STRING, name: 'Random String', description: 'Passwords & Tokens', icon: Type, category: 'Generator' },
+  { id: ToolId.UNICODE_CONVERTER, name: 'Unicode Converter', description: 'Text ↔ Unicode', icon: Languages, category: 'Converter' },
 ];
 
 // Deprecated Component

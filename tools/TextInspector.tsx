@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Type, AlignLeft, Hash, ArrowRight } from 'lucide-react';
+import { Type, AlignLeft, Hash, ArrowRight, Copy, Check, Trash2 } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
 
 export const TextInspector: React.FC = () => {
   const [text, setText] = useState('');
+  const { copy, isCopied } = useCopy();
 
   const stats = useMemo(() => {
     return {
@@ -79,10 +81,25 @@ export const TextInspector: React.FC = () => {
          <button onClick={() => transform('snake')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors">
             snake_case
          </button>
-         <button onClick={() => transform('kebab')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors">
-            kebab-case
-         </button>
-      </div>
+          <button onClick={() => transform('kebab')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors">
+             kebab-case
+          </button>
+          
+          <div className="flex-1"></div>
+
+          <button 
+             onClick={() => copy(text)}
+             className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors flex items-center gap-1"
+          >
+             {isCopied() ? <Check size={14} /> : <Copy size={14} />}
+          </button>
+          <button 
+             onClick={() => setText('')}
+             className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-red-50 hover:text-red-600 rounded-lg border border-slate-200 transition-colors flex items-center gap-1"
+          >
+             <Trash2 size={14} />
+          </button>
+       </div>
 
       <div className="flex-1 flex flex-col md:flex-row gap-6 min-h-0">
         {/* Editor */}

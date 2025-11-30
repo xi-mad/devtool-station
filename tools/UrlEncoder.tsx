@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, ArrowDownUp, AlertCircle } from 'lucide-react';
+import { Link, ArrowDownUp, AlertCircle, Copy, Check, Trash2 } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
 
 type EncodeMode = 'component' | 'uri';
 
@@ -8,6 +9,7 @@ export const UrlEncoder: React.FC = () => {
   const [encoded, setEncoded] = useState('');
   const [mode, setMode] = useState<EncodeMode>('component');
   const [error, setError] = useState<string | null>(null);
+  const { copy, isCopied } = useCopy();
 
   // Auto-encode when decoded changes
   const handleDecodedChange = (val: string) => {
@@ -78,14 +80,29 @@ export const UrlEncoder: React.FC = () => {
             Full URI
           </button>
         </div>
+        <button 
+          onClick={() => { setDecoded(''); setEncoded(''); setError(null); }}
+          className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          title="Clear All"
+        >
+          <Trash2 size={18} />
+        </button>
       </div>
 
       {/* Editors */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 min-h-0">
         <div className="flex flex-col gap-2 h-full">
-          <label className="text-sm font-medium text-slate-700 flex justify-between">
+          <label className="text-sm font-medium text-slate-700 flex justify-between items-center">
             <span>Decoded Text</span>
-            <span className="text-xs text-slate-400 font-normal">Normal string</span>
+            <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-400 font-normal">Normal string</span>
+                <button 
+                    onClick={() => copy(decoded, 'decoded')}
+                    className="text-xs flex items-center gap-1 text-slate-500 hover:text-brand-600 transition-colors"
+                >
+                    {isCopied('decoded') ? <Check size={14} /> : <Copy size={14} />}
+                </button>
+            </div>
           </label>
           <textarea
             value={decoded}
@@ -96,9 +113,17 @@ export const UrlEncoder: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-2 h-full relative">
-          <label className="text-sm font-medium text-slate-700 flex justify-between">
+          <label className="text-sm font-medium text-slate-700 flex justify-between items-center">
             <span>Encoded Text</span>
-            <span className="text-xs text-slate-400 font-normal">URL Safe</span>
+            <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-400 font-normal">URL Safe</span>
+                <button 
+                    onClick={() => copy(encoded, 'encoded')}
+                    className="text-xs flex items-center gap-1 text-slate-500 hover:text-brand-600 transition-colors"
+                >
+                    {isCopied('encoded') ? <Check size={14} /> : <Copy size={14} />}
+                </button>
+            </div>
           </label>
           <textarea
             value={encoded}

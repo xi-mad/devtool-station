@@ -14,6 +14,7 @@ export enum ToolId {
   NUMBER_BASE = 'number-base',
   SQL_FORMATTER = 'sql-formatter',
   RANDOM_STRING = 'random-string',
+  UNICODE_CONVERTER = 'unicode-converter',
 }
 
 export interface ToolDefinition {

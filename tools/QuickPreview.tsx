@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, ArrowRight, Type, Shield, Hash, Database, Dna } from 'lucide-react';
+import { Zap, Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, ArrowRight, Type, Shield, Hash, Database, Dna, Languages } from 'lucide-react';
 
 type DetectedType = 'json' | 'timestamp' | 'color' | 'base64' | 'url' | 'jwt' | 'unknown';
 
@@ -229,6 +229,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             <QuickLink icon={FileText} label="Text Diff" onClick={() => onSelectTool('diff-viewer')} />
             <QuickLink icon={Type} label="Char Counter" onClick={() => onSelectTool('text-inspector')} />
             <QuickLink icon={Dna} label="Random String" onClick={() => onSelectTool('random-string')} />
+            <QuickLink icon={Languages} label="Unicode" onClick={() => onSelectTool('unicode-converter')} />
         </div>
       )}
     </div>
