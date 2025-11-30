@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ToolId, ToolDefinition } from '../types';
-import { ChevronDown, Menu, Github, Moon, Sun, Zap } from 'lucide-react';
+import { ToolId } from '../types';
+import { ChevronDown, Zap, Github } from 'lucide-react';
 import { TOOLS } from './Sidebar'; // Re-using the list from Sidebar for now, we will move it later or import it
 
 interface NavbarProps {
@@ -43,9 +43,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
               onClick={() => handleToolSelect(ToolId.QUICK_PREVIEW)}
               className="flex items-center gap-2 group"
             >
-              <div className="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center font-bold text-lg group-hover:bg-slate-800 transition-colors">
-                <Zap size={18} fill="currentColor" />
-              </div>
+              <img 
+                src="favicon-32x32.png" 
+                alt="DevTool Station Logo" 
+                className="w-8 h-8 rounded-lg group-hover:scale-110 transition-transform"
+              />
               <span className="font-bold text-xl tracking-tight text-slate-900">Dongdong's Tools</span>
             </button>
 
@@ -101,15 +103,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {/*
             <a 
-              href="#" 
+              href="https://github.com/xi-mad/devtool-station"
+              target="_blank"
               className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
               title="View on GitHub"
             >
               <Github size={20} />
             </a>
-            */}
           </div>
         </div>
       </div>
