@@ -1,0 +1,5 @@
+{
+  "name": "DevTool Station",
+  "description": "A comprehensive developer utility toolkit featuring JSON formatting, diff checking, Base64 encoding, timestamp conversion, and color tools.",
+  "requestFramePermissions": []
+}
