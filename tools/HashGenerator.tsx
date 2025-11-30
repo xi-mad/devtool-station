@@ -1,43 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Copy, Check } from 'lucide-react';
+import CryptoJS from 'crypto-js';
+import { useCopy } from '../hooks/useCopy';
 
 export const HashGenerator: React.FC = () => {
   const [input, setInput] = useState('');
   const [hashes, setHashes] = useState<Record<string, string>>({});
-  const [copied, setCopied] = useState<string | null>(null);
+  const { copy, isCopied } = useCopy();
 
   useEffect(() => {
-    const generateHashes = async () => {
-      if (!input) {
-        setHashes({});
-        return;
-      }
+    if (!input) {
+      setHashes({});
+      return;
+    }
 
-      const msgBuffer = new TextEncoder().encode(input);
-      const algos = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
-      const results: Record<string, string> = {};
-
-      for (const algo of algos) {
-        try {
-          const hashBuffer = await crypto.subtle.digest(algo, msgBuffer);
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-          results[algo] = hashHex;
-        } catch (e) {
-          console.error(e);
-        }
-      }
-      setHashes(results);
+    const results: Record<string, string> = {
+      'MD5': CryptoJS.MD5(input).toString(),
+      'SHA-1': CryptoJS.SHA1(input).toString(),
+      'SHA-256': CryptoJS.SHA256(input).toString(),
+      'SHA-512': CryptoJS.SHA512(input).toString(),
+      'SHA-3': CryptoJS.SHA3(input).toString(),
+      'RIPEMD-160': CryptoJS.RIPEMD160(input).toString(),
     };
 
-    generateHashes();
+    setHashes(results);
   }, [input]);
 
-  const copyToClipboard = (text: string, key: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(key);
-    setTimeout(() => setCopied(null), 1500);
-  };
+
+
+  const algorithms = ['MD5', 'SHA-1', 'SHA-256', 'SHA-512', 'SHA-3', 'RIPEMD-160'];
 
   return (
     <div className="flex flex-col gap-6 h-[calc(100vh-180px)]">
@@ -59,7 +50,7 @@ export const HashGenerator: React.FC = () => {
             <span className="text-xs font-bold uppercase text-slate-500">Generated Hashes</span>
          </div>
          <div className="overflow-y-auto p-6 space-y-6">
-            {['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'].map((algo) => (
+            {algorithms.map((algo) => (
                <div key={algo} className="space-y-1">
                   <label className="text-xs font-semibold text-slate-500 uppercase">{algo}</label>
                   <div className="relative group">
@@ -68,10 +59,10 @@ export const HashGenerator: React.FC = () => {
                      </div>
                      {hashes[algo] && (
                         <button 
-                           onClick={() => copyToClipboard(hashes[algo], algo)}
+                           onClick={() => copy(hashes[algo], algo)}
                            className="absolute top-1/2 -translate-y-1/2 right-2 p-1.5 text-slate-400 hover:text-brand-600 hover:bg-white rounded-md transition-all shadow-sm border border-transparent hover:border-slate-200"
                         >
-                           {copied === algo ? <Check size={16} /> : <Copy size={16} />}
+                           {isCopied(algo) ? <Check size={16} /> : <Copy size={16} />}
                         </button>
                      )}
                   </div>

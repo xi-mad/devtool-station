@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Copy, Check } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
 
 // Helpers
 const hexToRgb = (hex: string) => {
@@ -66,7 +67,7 @@ const TAILWIND_COLORS = {
 export const ColorTool: React.FC = () => {
   const [hex, setHex] = useState('#3b82f6');
   const [rgb, setRgb] = useState({ r: 59, g: 130, b: 246 });
-  const [copied, setCopied] = useState<string | null>(null);
+  const { copy, isCopied } = useCopy();
 
   const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -84,11 +85,7 @@ export const ColorTool: React.FC = () => {
 
   const generatedPalette = useMemo(() => generateTailwindPalette(hex), [hex]);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(text);
-    setTimeout(() => setCopied(null), 1000);
-  };
+
 
   return (
     <div className="space-y-8">
@@ -120,10 +117,10 @@ export const ColorTool: React.FC = () => {
                 className="w-full p-2 border border-slate-300 rounded-lg font-mono uppercase"
                 />
                 <button 
-                    onClick={() => copyToClipboard(hex)}
+                    onClick={() => copy(hex, hex)}
                     className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg border border-slate-200"
                 >
-                    {copied === hex ? <Check size={20} className="text-green-600"/> : <Copy size={20} />}
+                    {isCopied(hex) ? <Check size={20} className="text-green-600"/> : <Copy size={20} />}
                 </button>
             </div>
           </div>
@@ -144,10 +141,10 @@ export const ColorTool: React.FC = () => {
             <label className="block text-sm font-medium text-slate-700 mb-1">CSS</label>
              <div 
                 className="bg-slate-50 p-2 rounded-lg font-mono text-sm text-slate-600 border border-slate-200 select-all cursor-pointer hover:bg-slate-100 transition-colors flex justify-between items-center"
-                onClick={() => copyToClipboard(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}
+                onClick={() => copy(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`, `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}
              >
                 {`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`}
-                <Copy size={14} className="opacity-50" />
+                {isCopied(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`) ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="opacity-50" />}
              </div>
           </div>
         </div>
@@ -159,12 +156,12 @@ export const ColorTool: React.FC = () => {
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div className="grid grid-cols-5 sm:grid-cols-11 gap-2">
                 {Object.entries(generatedPalette).map(([weight, color]) => (
-                    <div key={weight} className="flex flex-col gap-1 group cursor-pointer" onClick={() => copyToClipboard(color)}>
+                    <div key={weight} className="flex flex-col gap-1 group cursor-pointer" onClick={() => copy(color, color)}>
                         <div 
                             className="w-full aspect-square rounded-md shadow-sm border border-black/5 relative overflow-hidden transition-transform group-hover:scale-105"
                             style={{ backgroundColor: color }}
                         >
-                            {copied === color && (
+                            {isCopied(color) && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/10 text-white">
                                     <Check size={16} />
                                 </div>

@@ -17,6 +17,7 @@ import { UuidGenerator } from './tools/UuidGenerator';
 import { HashGenerator } from './tools/HashGenerator';
 import { NumberBase } from './tools/NumberBase';
 import { SqlFormatter } from './tools/SqlFormatter';
+import { RandomStringGenerator } from './tools/RandomStringGenerator';
 
 const App: React.FC = () => {
   const [activeToolId, setActiveToolId] = useState<ToolId>(ToolId.QUICK_PREVIEW);
@@ -37,6 +38,7 @@ const App: React.FC = () => {
       case ToolId.HASH_GENERATOR: return <HashGenerator />;
       case ToolId.NUMBER_BASE: return <NumberBase />;
       case ToolId.SQL_FORMATTER: return <SqlFormatter />;
+      case ToolId.RANDOM_STRING: return <RandomStringGenerator />;
       default: return <QuickPreview onSelectTool={setActiveToolId} />;
     }
   };

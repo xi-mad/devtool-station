@@ -13,6 +13,7 @@ export enum ToolId {
   HASH_GENERATOR = 'hash-generator',
   NUMBER_BASE = 'number-base',
   SQL_FORMATTER = 'sql-formatter',
+  RANDOM_STRING = 'random-string',
 }
 
 export interface ToolDefinition {

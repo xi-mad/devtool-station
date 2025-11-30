@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowDown, ArrowUp } from 'lucide-react';
 
 export const Base64Tool: React.FC = () => {
   const [text, setText] = useState('');

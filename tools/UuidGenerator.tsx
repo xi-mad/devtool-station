@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Copy, RefreshCw, Settings, Check, FileText } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
 
 type UuidVersion = 'v1' | 'v4' | 'v7';
 
@@ -82,7 +83,7 @@ export const UuidGenerator: React.FC = () => {
   const [uppercase, setUppercase] = useState(false);
   const [noHyphens, setNoHyphens] = useState(false);
   const [uuids, setUuids] = useState<string[]>([]);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const { copy, isCopied } = useCopy();
 
   const generate = useCallback(() => {
     let fn: () => string = generateV4;
@@ -102,17 +103,7 @@ export const UuidGenerator: React.FC = () => {
     generate();
   }, [generate]);
 
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 1500);
-  };
 
-  const copyAll = () => {
-    navigator.clipboard.writeText(uuids.join('\n'));
-    setCopiedIndex(-1); // -1 for all
-    setTimeout(() => setCopiedIndex(null), 1500);
-  };
 
   return (
     <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-180px)]">
@@ -207,13 +198,13 @@ export const UuidGenerator: React.FC = () => {
              </div>
              <span className="text-sm text-slate-500">{uuids.length} generated</span>
            </div>
-           <button 
-              onClick={copyAll}
-              className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-600 px-3 py-1.5 rounded-lg hover:bg-white border border-transparent hover:border-slate-200 transition-all"
-           >
-             {copiedIndex === -1 ? <Check size={16} /> : <FileText size={16} />}
-             Copy All
-           </button>
+            <button 
+               onClick={() => copy(uuids.join('\n'), 'all')}
+               className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-600 px-3 py-1.5 rounded-lg hover:bg-white border border-transparent hover:border-slate-200 transition-all"
+            >
+              {isCopied('all') ? <Check size={16} /> : <FileText size={16} />}
+              Copy All
+            </button>
          </div>
 
          <div className="flex-1 overflow-y-auto p-2 space-y-1">
@@ -229,16 +220,16 @@ export const UuidGenerator: React.FC = () => {
                   {uuid}
                 </code>
                 <button
-                  onClick={() => copyToClipboard(uuid, idx)}
+                  onClick={() => copy(uuid, idx.toString())}
                   className={`
                     p-2 rounded-lg transition-all
-                    ${copiedIndex === idx 
+                    ${isCopied(idx.toString()) 
                       ? 'bg-green-100 text-green-700' 
                       : 'text-slate-400 hover:text-brand-600 hover:bg-white shadow-sm opacity-0 group-hover:opacity-100'}
                   `}
                   title="Copy"
                 >
-                  {copiedIndex === idx ? <Check size={18} /> : <Copy size={18} />}
+                  {isCopied(idx.toString()) ? <Check size={18} /> : <Copy size={18} />}
                 </button>
               </div>
             ))}

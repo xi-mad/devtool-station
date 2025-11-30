@@ -29,6 +29,7 @@ export const TOOLS: ToolDefinition[] = [
   { id: ToolId.TEXT_INSPECTOR, name: 'Text Inspector', description: 'Stats & Case Convert', icon: Type, category: 'Generator' },
   { id: ToolId.COLOR_PALETTE, name: 'Color Tools', description: 'Hex, RGB, Picker', icon: Palette, category: 'Generator' },
   { id: ToolId.UUID_GENERATOR, name: 'UUID Generator', description: 'Generate Unique IDs', icon: Fingerprint, category: 'Generator' },
+  { id: ToolId.RANDOM_STRING, name: 'Random String', description: 'Passwords & Tokens', icon: Type, category: 'Generator' },
 ];
 
 // Deprecated Component

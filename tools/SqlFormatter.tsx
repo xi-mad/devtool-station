@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
-import { Database, Play, Copy, Trash2 } from 'lucide-react';
+import { Database, Play, Copy, Trash2, Check } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
+import { format } from 'sql-formatter';
 
 export const SqlFormatter: React.FC = () => {
   const [input, setInput] = useState('');
+  const { copy, isCopied } = useCopy();
   
   const formatSql = () => {
     let sql = input.trim();
     if (!sql) return;
 
-    // Simple Regex-based formatter
-    // 1. Collapse spaces
-    sql = sql.replace(/\s+/g, ' ');
-    
-    // 2. Add newlines before major keywords
-    const keywords = [
-        'SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'JOIN', 
-        'ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT', 'UNION', 'VALUES', 'SET', 'UPDATE', 'INSERT INTO', 'DELETE FROM'
-    ];
-    
-    // Case insensitive replace to insert newlines
-    keywords.forEach(kw => {
-        const regex = new RegExp(`\\s(${kw})\\s`, 'gi');
-        sql = sql.replace(regex, '\n$1 ');
-    });
-
-    // 3. Indent columns in SELECT slightly (after commas)
-    sql = sql.replace(/\s*,\s*/g, ',\n    ');
-
-    // 4. Bracket handling (simple)
-    sql = sql.replace(/\s*\(\s*/g, ' (\n    ');
-    sql = sql.replace(/\s*\)\s*/g, '\n) ');
-
-    setInput(sql);
+    try {
+      const formatted = format(sql, {
+        language: 'sql',
+        tabWidth: 2,
+        keywordCase: 'upper',
+      });
+      setInput(formatted);
+    } catch (e) {
+      // Fallback or error handling
+      console.error(e);
+    }
   };
 
   const compressSql = () => {
@@ -61,11 +51,11 @@ export const SqlFormatter: React.FC = () => {
                 Minify
             </button>
             <button 
-                onClick={() => navigator.clipboard.writeText(input)}
+                onClick={() => copy(input)}
                 className="p-2 text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors border border-transparent hover:border-brand-100"
                 title="Copy"
             >
-                <Copy size={18} />
+                {isCopied() ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
             </button>
             <button 
                 onClick={() => setInput('')}

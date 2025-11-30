@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { Copy, Trash2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Copy, Trash2, CheckCircle, AlertCircle, Check } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
 
 export const JsonFormatter: React.FC = () => {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { copy, isCopied } = useCopy();
 
   const formatJson = useCallback(() => {
     if (!input.trim()) return;
@@ -33,10 +35,6 @@ export const JsonFormatter: React.FC = () => {
     }
   }, [input]);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(input);
-  };
-
   const clear = () => {
     setInput('');
     setError(null);
@@ -61,11 +59,11 @@ export const JsonFormatter: React.FC = () => {
         </div>
         <div className="flex gap-2">
            <button 
-            onClick={copyToClipboard}
+            onClick={() => copy(input)}
             className="p-2 text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
             title="Copy"
           >
-            <Copy size={18} />
+            {isCopied() ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
           </button>
           <button 
             onClick={clear}

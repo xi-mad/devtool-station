@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Copy } from 'lucide-react';
+import { Clock, Copy, Check } from 'lucide-react';
+import { useCopy } from '../hooks/useCopy';
 
 export const TimestampTool: React.FC = () => {
   const [now, setNow] = useState(Math.floor(Date.now() / 1000));
   const [inputTs, setInputTs] = useState<string>(Math.floor(Date.now() / 1000).toString());
   const [inputDate, setInputDate] = useState<string>(new Date().toISOString());
+  const { copy, isCopied } = useCopy();
 
   // Update "Now" every second
   useEffect(() => {
@@ -32,6 +34,8 @@ export const TimestampTool: React.FC = () => {
     }
   };
 
+
+
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       {/* Current Time Card */}
@@ -50,10 +54,11 @@ export const TimestampTool: React.FC = () => {
             {now}
           </code>
           <button 
-            onClick={() => navigator.clipboard.writeText(now.toString())}
+            onClick={() => copy(now.toString())}
             className="p-3 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+            title="Copy"
           >
-            <Copy size={20} />
+            {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
           </button>
         </div>
       </div>
