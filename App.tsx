@@ -20,6 +20,7 @@ import { SqlFormatter } from './tools/SqlFormatter';
 import { RandomStringGenerator } from './tools/RandomStringGenerator';
 import { UnicodeConverter } from './tools/UnicodeConverter';
 import { FullscreenColor } from './tools/FullscreenColor';
+import { JwtDecoder } from './tools/JwtDecoder';
 
 const App: React.FC = () => {
   const [activeToolId, setActiveToolId] = useState<ToolId>(ToolId.QUICK_PREVIEW);
@@ -43,6 +44,7 @@ const App: React.FC = () => {
       case ToolId.RANDOM_STRING: return <RandomStringGenerator />;
       case ToolId.UNICODE_CONVERTER: return <UnicodeConverter />;
       case ToolId.FULLSCREEN_COLOR: return <FullscreenColor />;
+      case ToolId.JWT_DECODER: return <JwtDecoder />;
       default: return <QuickPreview onSelectTool={setActiveToolId} />;
     }
   };

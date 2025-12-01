@@ -33,6 +33,7 @@ export const TOOLS: ToolDefinition[] = [
   { id: ToolId.UUID_GENERATOR, name: 'UUID Generator', description: 'Generate Unique IDs', icon: Fingerprint, category: 'Generator' },
   { id: ToolId.RANDOM_STRING, name: 'Random String', description: 'Passwords & Tokens', icon: Type, category: 'Generator' },
   { id: ToolId.UNICODE_CONVERTER, name: 'Unicode Converter', description: 'Text ↔ Unicode', icon: Languages, category: 'Converter' },
+  { id: ToolId.JWT_DECODER, name: 'JWT Decoder', description: 'Decode & Encode JWT', icon: Fingerprint, category: 'Converter' },
   { id: ToolId.FULLSCREEN_COLOR, name: 'Fullscreen Color', description: 'Display Color Fullscreen', icon: Maximize2, category: 'Generator' },
 ];
 

@@ -169,7 +169,7 @@ export const ColorTool: React.FC = () => {
                         </div>
                         <div className="text-center">
                             <div className="text-[10px] font-bold text-slate-500">{weight}</div>
-                            <div className="text-[10px] font-mono text-slate-400 uppercase hidden sm:block">{color.replace('#', '')}</div>
+                            <div className="text-[10px] font-mono text-slate-400 uppercase hidden sm:block">{(color as string).replace('#', '')}</div>
                         </div>
                     </div>
                 ))}

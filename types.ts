@@ -16,6 +16,7 @@ export enum ToolId {
   RANDOM_STRING = 'random-string',
   UNICODE_CONVERTER = 'unicode-converter',
   FULLSCREEN_COLOR = 'fullscreen-color',
+  JWT_DECODER = 'jwt-decoder',
 }
 
 export interface ToolDefinition {

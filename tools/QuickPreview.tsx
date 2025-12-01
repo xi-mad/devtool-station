@@ -1,161 +1,313 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, ArrowRight, Type, Shield, Hash, Database, Dna, Languages, Maximize2 } from 'lucide-react';
+import { Zap, Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, ArrowRight, Type, Shield, Hash, Database, Dna, Languages, Maximize2, Info } from 'lucide-react';
+import CryptoJS from 'crypto-js';
+import { format } from 'sql-formatter';
 
-type DetectedType = 'json' | 'timestamp' | 'color' | 'base64' | 'url' | 'jwt' | 'unknown';
+type DetectedType = 'json' | 'timestamp' | 'color' | 'base64' | 'url' | 'jwt' | 'number' | 'text' | 'unicode' | 'sql' | 'unknown';
+
+interface PreviewResult {
+  id: string;
+  type: DetectedType;
+  label: string;
+  icon: any;
+  content: React.ReactNode;
+  priority: number; // Higher shows first
+}
 
 export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ onSelectTool }) => {
   const [input, setInput] = useState('');
-  const [type, setType] = useState<DetectedType>('unknown');
-  const [result, setResult] = useState<React.ReactNode>(null);
+  const [results, setResults] = useState<PreviewResult[]>([]);
 
   useEffect(() => {
     const val = input.trim();
     if (!val) {
-      setType('unknown');
-      setResult(null);
+      setResults([]);
       return;
     }
 
-    // 1. Check for JSON
+    const newResults: PreviewResult[] = [];
+
+    // --- Detectors ---
+
+    // 0. JSON
     if ((val.startsWith('{') || val.startsWith('[')) && (val.endsWith('}') || val.endsWith(']'))) {
       try {
         const parsed = JSON.parse(val);
-        setType('json');
-        setResult(
-          <pre className="text-xs md:text-sm font-mono text-slate-700 whitespace-pre-wrap break-all">
-            {JSON.stringify(parsed, null, 2)}
-          </pre>
-        );
-        return;
+        newResults.push({
+          id: 'json',
+          type: 'json',
+          label: 'JSON',
+          icon: Braces,
+          priority: 100,
+          content: (
+            <pre className="text-xs md:text-sm font-mono text-slate-700 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">
+              {JSON.stringify(parsed, null, 2)}
+            </pre>
+          )
+        });
       } catch (e) {}
     }
 
-    // 2. Check for Timestamp (10-13 digits)
+    // 1. SQL
+    const sqlKeywords = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER', 'DROP', 'FROM', 'WHERE', 'JOIN'];
+    const upperVal = val.toUpperCase();
+    if (sqlKeywords.some(k => upperVal.includes(k)) && (upperVal.includes('SELECT') || upperVal.includes('TABLE') || upperVal.includes('INTO') || upperVal.includes('VALUES'))) {
+        try {
+            const formatted = format(val, { language: 'sql' });
+            if (formatted !== val) {
+                newResults.push({
+                    id: 'sql',
+                    type: 'sql',
+                    label: 'SQL Formatter',
+                    icon: Database,
+                    priority: 95,
+                    content: (
+                        <pre className="text-xs md:text-sm font-mono text-slate-700 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">
+                            {formatted}
+                        </pre>
+                    )
+                });
+            }
+        } catch (e) {}
+    }
+
+    // 2. Timestamp (10-13 digits)
     if (/^\d{10,13}$/.test(val)) {
       const num = parseInt(val);
       const isMs = val.length === 13;
       const date = new Date(isMs ? num : num * 1000);
       if (!isNaN(date.getTime())) {
-        setType('timestamp');
-        setResult(
-          <div className="space-y-2">
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <span className="text-slate-500">ISO 8601</span>
-              <span className="font-mono text-slate-900">{date.toISOString()}</span>
+        newResults.push({
+          id: 'timestamp',
+          type: 'timestamp',
+          label: 'Timestamp',
+          icon: Clock,
+          priority: 90,
+          content: (
+            <div className="space-y-2">
+              <div className="flex justify-between border-b border-slate-100 pb-2">
+                <span className="text-slate-500">ISO 8601</span>
+                <span className="font-mono text-slate-900">{date.toISOString()}</span>
+              </div>
+              <div className="flex justify-between border-b border-slate-100 pb-2">
+                <span className="text-slate-500">Local</span>
+                <span className="font-mono text-slate-900">{date.toLocaleString()}</span>
+              </div>
+               <div className="flex justify-between">
+                <span className="text-slate-500">Relative</span>
+                <span className="font-mono text-slate-900">
+                    {(() => {
+                   const diff = Date.now() - date.getTime();
+                   const seconds = Math.floor(Math.abs(diff) / 1000);
+                   const suffix = diff > 0 ? 'ago' : 'from now';
+                   if (seconds < 60) return `${seconds}s ${suffix}`;
+                   if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${suffix}`;
+                   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ${suffix}`;
+                   return `${Math.floor(seconds / 86400)}d ${suffix}`;
+                 })()}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between border-b border-slate-100 pb-2">
-              <span className="text-slate-500">Local</span>
-              <span className="font-mono text-slate-900">{date.toLocaleString()}</span>
-            </div>
-             <div className="flex justify-between">
-              <span className="text-slate-500">Relative</span>
-              <span className="font-mono text-slate-900">
-                  {(() => {
-                 const diff = Date.now() - date.getTime();
-                 const seconds = Math.floor(Math.abs(diff) / 1000);
-                 const suffix = diff > 0 ? 'ago' : 'from now';
-                 if (seconds < 60) return `${seconds}s ${suffix}`;
-                 if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${suffix}`;
-                 if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ${suffix}`;
-                 return `${Math.floor(seconds / 86400)}d ${suffix}`;
-               })()}
-              </span>
-            </div>
-          </div>
-        );
-        return;
+          )
+        });
       }
     }
 
-    // 3. Check for Color (Hex, RGB, HSL)
+    // 3. Color (Hex, RGB, HSL)
     const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     const rgbRegex = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/i;
     if (hexRegex.test(val) || rgbRegex.test(val) || val.startsWith('hsl(')) {
-        setType('color');
-        setResult(
-            <div className="flex items-center gap-6">
-                <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-200" style={{ backgroundColor: val }} />
-                <div className="space-y-1">
-                    <div className="text-lg font-bold text-slate-900 uppercase">{val}</div>
-                    <div className="text-sm text-slate-500">Valid CSS Color</div>
+        newResults.push({
+            id: 'color',
+            type: 'color',
+            label: 'Color',
+            icon: Palette,
+            priority: 95,
+            content: (
+                <div className="flex items-center gap-6">
+                    <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-200" style={{ backgroundColor: val }} />
+                    <div className="space-y-1">
+                        <div className="text-lg font-bold text-slate-900 uppercase">{val}</div>
+                        <div className="text-sm text-slate-500">Valid CSS Color</div>
+                    </div>
                 </div>
-            </div>
-        );
-        return;
+            )
+        });
     }
 
-    // 4. Check for JWT
+    // 4. JWT
     if (val.split('.').length === 3 && val.startsWith('ey')) {
         try {
             const [header, payload] = val.split('.').slice(0, 2).map(part => 
                 JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')))
             );
-            setType('jwt');
-            setResult(
-                 <div className="space-y-4">
-                     <div>
-                        <div className="text-xs font-semibold text-slate-500 uppercase mb-1">Header</div>
-                        <pre className="bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-700">{JSON.stringify(header, null, 2)}</pre>
-                     </div>
-                     <div>
-                        <div className="text-xs font-semibold text-slate-500 uppercase mb-1">Payload</div>
-                        <pre className="bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-700">{JSON.stringify(payload, null, 2)}</pre>
-                     </div>
-                </div>
-            );
-            return;
+            newResults.push({
+                id: 'jwt',
+                type: 'jwt',
+                label: 'JWT Token',
+                icon: Fingerprint,
+                priority: 100,
+                content: (
+                     <div className="space-y-4">
+                         <div>
+                            <div className="text-xs font-semibold text-slate-500 uppercase mb-1">Header</div>
+                            <pre className="bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-700 overflow-x-auto">{JSON.stringify(header, null, 2)}</pre>
+                         </div>
+                         <div>
+                            <div className="text-xs font-semibold text-slate-500 uppercase mb-1">Payload</div>
+                            <pre className="bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-700 overflow-x-auto">{JSON.stringify(payload, null, 2)}</pre>
+                         </div>
+                    </div>
+                )
+            });
         } catch(e) {}
     }
 
-    // 5. Check for URL Encoded
+    // 5. URL Encoded
     if (/%[0-9A-F]{2}/i.test(val)) {
         try {
             const decoded = decodeURIComponent(val);
             if (decoded !== val) {
-                setType('url');
-                setResult(
-                    <div className="break-all font-mono text-slate-900">{decoded}</div>
-                );
-                return;
+                newResults.push({
+                    id: 'url',
+                    type: 'url',
+                    label: 'URL Decoded',
+                    icon: Link,
+                    priority: 80,
+                    content: <div className="break-all font-mono text-slate-900">{decoded}</div>
+                });
             }
         } catch(e) {}
     }
 
-    // 6. Check for Base64 (Basic check)
-    // Regex is tricky for base64 as it matches normal words. checking for typical chars and length > 8
+    // 6. Unicode Escapes (\uXXXX)
+    if (/\\u[0-9a-fA-F]{4}/.test(val)) {
+        try {
+            const decoded = val.replace(/\\u[\dA-F]{4}/gi, (match) => 
+                String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
+            );
+            if (decoded !== val) {
+                newResults.push({
+                    id: 'unicode',
+                    type: 'unicode',
+                    label: 'Unicode Decoded',
+                    icon: Languages,
+                    priority: 85,
+                    content: <div className="break-all font-mono text-slate-900">{decoded}</div>
+                });
+            }
+        } catch(e) {}
+    }
+
+    // 7. Base64
     const base64Regex = /^[A-Za-z0-9+/]+={0,2}$/;
     if (val.length > 8 && base64Regex.test(val) && !val.includes(' ')) {
         try {
             const decoded = atob(val);
-            // Check if result looks like readable text
-             if (/^[\x20-\x7E]*$/.test(decoded)) {
-                setType('base64');
-                setResult(
-                    <div className="break-all font-mono text-slate-900">{decoded}</div>
-                );
-                return;
-             }
+            if (/^[\x20-\x7E]*$/.test(decoded)) {
+                newResults.push({
+                    id: 'base64',
+                    type: 'base64',
+                    label: 'Base64 Decoded',
+                    icon: Binary,
+                    priority: 85,
+                    content: <div className="break-all font-mono text-slate-900">{decoded}</div>
+                });
+            }
         } catch(e) {}
     }
 
-    setType('unknown');
-    setResult(null);
+    // 8. Number Base (Decimal, Hex, Binary)
+    if (/^\d+$/.test(val) || /^0x[0-9a-fA-F]+$/.test(val) || /^0b[01]+$/.test(val)) {
+        let num: number | null = null;
+        if (val.startsWith('0x')) num = parseInt(val, 16);
+        else if (val.startsWith('0b')) num = parseInt(val.slice(2), 2);
+        else num = parseInt(val, 10);
+
+        if (num !== null && !isNaN(num)) {
+            newResults.push({
+                id: 'number',
+                type: 'number',
+                label: 'Number Base',
+                icon: Hash,
+                priority: 70,
+                content: (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-3 bg-slate-50 rounded-lg">
+                            <div className="text-xs text-slate-500 mb-1">Decimal</div>
+                            <div className="font-mono font-medium">{num.toString(10)}</div>
+                        </div>
+                        <div className="p-3 bg-slate-50 rounded-lg">
+                            <div className="text-xs text-slate-500 mb-1">Hexadecimal</div>
+                            <div className="font-mono font-medium">0x{num.toString(16).toUpperCase()}</div>
+                        </div>
+                        <div className="p-3 bg-slate-50 rounded-lg">
+                            <div className="text-xs text-slate-500 mb-1">Binary</div>
+                            <div className="font-mono font-medium">0b{num.toString(2)}</div>
+                        </div>
+                    </div>
+                )
+            });
+        }
+    }
+
+    // 9. Text Stats (Always show for non-empty string)
+    newResults.push({
+        id: 'text-stats',
+        type: 'text',
+        label: 'Text Statistics',
+        icon: Type,
+        priority: 10,
+        content: (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="flex flex-col">
+                    <span className="text-xs text-slate-500">Characters</span>
+                    <span className="font-mono font-medium">{val.length}</span>
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-xs text-slate-500">Words</span>
+                    <span className="font-mono font-medium">{val.trim() ? val.trim().split(/\s+/).length : 0}</span>
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-xs text-slate-500">Lines</span>
+                    <span className="font-mono font-medium">{val.split(/\r\n|\r|\n/).length}</span>
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-xs text-slate-500">Bytes</span>
+                    <span className="font-mono font-medium">{new Blob([val]).size}</span>
+                </div>
+            </div>
+        )
+    });
+
+    // 10. Hash (MD5, SHA256) - Always show
+    newResults.push({
+        id: 'hash',
+        type: 'unknown', // Generic
+        label: 'Hashes',
+        icon: Shield,
+        priority: 5,
+        content: (
+            <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                    <span className="w-16 text-xs text-slate-500">MD5</span>
+                    <code className="flex-1 bg-slate-50 px-2 py-1 rounded text-xs font-mono text-slate-700 break-all">
+                        {CryptoJS.MD5(val).toString()}
+                    </code>
+                </div>
+                <div className="flex items-center gap-3">
+                    <span className="w-16 text-xs text-slate-500">SHA-256</span>
+                    <code className="flex-1 bg-slate-50 px-2 py-1 rounded text-xs font-mono text-slate-700 break-all">
+                        {CryptoJS.SHA256(val).toString()}
+                    </code>
+                </div>
+            </div>
+        )
+    });
+
+    setResults(newResults.sort((a, b) => b.priority - a.priority));
 
   }, [input]);
-
-  const getIcon = () => {
-    switch(type) {
-        case 'json': return Braces;
-        case 'timestamp': return Clock;
-        case 'color': return Palette;
-        case 'base64': return Binary;
-        case 'url': return Link;
-        case 'jwt': return Fingerprint;
-        default: return FileText;
-    }
-  }
-
-  const TypeIcon = getIcon();
 
   return (
     <div className="max-w-3xl mx-auto space-y-12 py-12">
@@ -187,29 +339,30 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             )}
         </div>
 
-        {/* Live Result Card */}
+        {/* Live Result Cards */}
         {input && (
-             <div className={`
-                bg-white rounded-xl border shadow-sm overflow-hidden transition-all duration-300
-                ${type !== 'unknown' ? 'border-brand-200 ring-4 ring-brand-50/50' : 'border-slate-200 opacity-50'}
-             `}>
-                <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <TypeIcon size={16} className={type !== 'unknown' ? 'text-brand-600' : 'text-slate-400'} />
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                            {type === 'unknown' ? 'Auto-detecting...' : `Detected: ${type}`}
-                        </span>
-                    </div>
-                </div>
-                <div className="p-6">
-                    {type === 'unknown' ? (
-                        <div className="text-slate-400 text-sm italic text-center py-4">
-                            Format not recognized or input too short.
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {results.length > 0 ? (
+                    results.map((res) => (
+                        <div key={res.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <res.icon size={16} className="text-brand-600" />
+                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        {res.label}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="p-6">
+                                {res.content}
+                            </div>
                         </div>
-                    ) : (
-                        result
-                    )}
-                </div>
+                    ))
+                ) : (
+                    <div className="text-slate-400 text-sm italic text-center py-4">
+                        No specific format detected.
+                    </div>
+                )}
             </div>
         )}
       </div>
@@ -230,6 +383,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             <QuickLink icon={Type} label="Char Counter" onClick={() => onSelectTool('text-inspector')} />
             <QuickLink icon={Dna} label="Random String" onClick={() => onSelectTool('random-string')} />
             <QuickLink icon={Languages} label="Unicode" onClick={() => onSelectTool('unicode-converter')} />
+            <QuickLink icon={Fingerprint} label="JWT Decoder" onClick={() => onSelectTool('jwt-decoder')} />
             <QuickLink icon={Maximize2} label="Fullscreen Color" onClick={() => onSelectTool('fullscreen-color')} />
         </div>
       )}
