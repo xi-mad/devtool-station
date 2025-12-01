@@ -224,7 +224,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             <QuickLink icon={Binary} label="Base64" onClick={() => onSelectTool('base64')} />
             <QuickLink icon={Shield} label="Hash Gen" onClick={() => onSelectTool('hash-generator')} />
             <QuickLink icon={Link} label="URL Encoding" onClick={() => onSelectTool('url-encoder')} />
-            <QuickLink icon={Fingerprint} label="UUID / JWT" onClick={() => onSelectTool('uuid-generator')} /> 
+            <QuickLink icon={Fingerprint} label="UUID" onClick={() => onSelectTool('uuid-generator')} /> 
             <QuickLink icon={Hash} label="Number Base" onClick={() => onSelectTool('number-base')} />
             <QuickLink icon={FileText} label="Text Diff" onClick={() => onSelectTool('diff-viewer')} />
             <QuickLink icon={Type} label="Char Counter" onClick={() => onSelectTool('text-inspector')} />

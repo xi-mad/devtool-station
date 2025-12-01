@@ -108,13 +108,13 @@ export const UuidGenerator: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-180px)]">
       {/* Configuration Panel */}
-      <div className="w-full md:w-72 flex flex-col gap-6 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <div className="flex items-center gap-2 pb-4 border-b border-slate-100">
+      <div className="w-full md:w-72 flex flex-col bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="flex items-center gap-2 p-6 border-b border-slate-100 bg-slate-50/50">
            <Settings className="text-slate-400" size={20} />
            <h3 className="font-semibold text-slate-900">Configuration</h3>
         </div>
 
-        <div className="space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Version</label>
             <div className="space-y-2">
@@ -157,7 +157,7 @@ export const UuidGenerator: React.FC = () => {
              </div>
           </div>
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3">
             <label className="flex items-center gap-3 cursor-pointer">
                <input 
                  type="checkbox" 
@@ -179,7 +179,7 @@ export const UuidGenerator: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-auto pt-6 border-t border-slate-100">
+        <div className="p-6 border-t border-slate-100 bg-slate-50/50">
            <button 
              onClick={generate}
              className="w-full flex items-center justify-center gap-2 bg-brand-600 text-white py-2.5 rounded-lg hover:bg-brand-700 transition-colors font-medium shadow-sm"
