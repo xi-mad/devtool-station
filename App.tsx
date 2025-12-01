@@ -21,6 +21,7 @@ import { RandomStringGenerator } from './tools/RandomStringGenerator';
 import { UnicodeConverter } from './tools/UnicodeConverter';
 import { FullscreenColor } from './tools/FullscreenColor';
 import { JwtDecoder } from './tools/JwtDecoder';
+import { QrCodeGenerator } from './tools/QrCodeGenerator';
 
 const App: React.FC = () => {
   const [activeToolId, setActiveToolId] = useState<ToolId>(ToolId.QUICK_PREVIEW);
@@ -45,6 +46,7 @@ const App: React.FC = () => {
       case ToolId.UNICODE_CONVERTER: return <UnicodeConverter />;
       case ToolId.FULLSCREEN_COLOR: return <FullscreenColor />;
       case ToolId.JWT_DECODER: return <JwtDecoder />;
+      case ToolId.QR_CODE_GENERATOR: return <QrCodeGenerator />;
       default: return <QuickPreview onSelectTool={setActiveToolId} />;
     }
   };

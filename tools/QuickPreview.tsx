@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, ArrowRight, Type, Shield, Hash, Database, Dna, Languages, Maximize2, Info } from 'lucide-react';
+import { Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, Type, Shield, Hash, Database, Dna, Languages, Maximize2, QrCode } from 'lucide-react';
 import CryptoJS from 'crypto-js';
 import { format } from 'sql-formatter';
+import QRCode from 'react-qr-code';
 
-type DetectedType = 'json' | 'timestamp' | 'color' | 'base64' | 'url' | 'jwt' | 'number' | 'text' | 'unicode' | 'sql' | 'unknown';
+type DetectedType = 'json' | 'timestamp' | 'color' | 'base64' | 'url' | 'jwt' | 'number' | 'text' | 'unicode' | 'sql' | 'qrcode' | 'unknown';
 
 interface PreviewResult {
   id: string;
@@ -219,7 +220,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
 
     // 8. Number Base (Decimal, Hex, Binary)
     if (/^\d+$/.test(val) || /^0x[0-9a-fA-F]+$/.test(val) || /^0b[01]+$/.test(val)) {
-        let num: number | null = null;
+        let num: number | null;
         if (val.startsWith('0x')) num = parseInt(val, 16);
         else if (val.startsWith('0b')) num = parseInt(val.slice(2), 2);
         else num = parseInt(val, 10);
@@ -280,7 +281,25 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         )
     });
 
-    // 10. Hash (MD5, SHA256) - Always show
+    // 10. QR Code (Always show for non-empty string, low priority)
+    newResults.push({
+        id: 'qrcode',
+        type: 'qrcode',
+        label: 'QR Code',
+        icon: QrCode,
+        priority: 5,
+        content: (
+            <div className="flex justify-center p-4 bg-white">
+                <QRCode 
+                    value={val}
+                    size={128}
+                    level="M"
+                />
+            </div>
+        )
+    });
+
+    // 11. Hash (MD5, SHA256) - Always show
     newResults.push({
         id: 'hash',
         type: 'unknown', // Generic
@@ -384,6 +403,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             <QuickLink icon={Dna} label="Random String" onClick={() => onSelectTool('random-string')} />
             <QuickLink icon={Languages} label="Unicode" onClick={() => onSelectTool('unicode-converter')} />
             <QuickLink icon={Fingerprint} label="JWT Decoder" onClick={() => onSelectTool('jwt-decoder')} />
+            <QuickLink icon={QrCode} label="QR Code" onClick={() => onSelectTool('qr-code-generator')} />
             <QuickLink icon={Maximize2} label="Fullscreen Color" onClick={() => onSelectTool('fullscreen-color')} />
         </div>
       )}

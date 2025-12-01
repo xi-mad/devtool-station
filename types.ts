@@ -17,6 +17,7 @@ export enum ToolId {
   UNICODE_CONVERTER = 'unicode-converter',
   FULLSCREEN_COLOR = 'fullscreen-color',
   JWT_DECODER = 'jwt-decoder',
+  QR_CODE_GENERATOR = 'qr-code-generator',
 }
 
 export interface ToolDefinition {
