@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Copy, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 export const TimestampTool: React.FC = () => {
+  const { t } = useTranslation();
   const [now, setNow] = useState(Math.floor(Date.now() / 1000));
   const [inputTs, setInputTs] = useState<string>(Math.floor(Date.now() / 1000).toString());
   const [inputDate, setInputDate] = useState<string>(new Date().toISOString());
@@ -34,8 +36,6 @@ export const TimestampTool: React.FC = () => {
     }
   };
 
-
-
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       {/* Current Time Card */}
@@ -45,8 +45,8 @@ export const TimestampTool: React.FC = () => {
             <Clock size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Current Unix Timestamp</h3>
-            <p className="text-slate-500 text-sm">Seconds since Jan 01 1970</p>
+            <h3 className="text-lg font-bold text-slate-900">{t('timestamp.current_unix_timestamp')}</h3>
+            <p className="text-slate-500 text-sm">{t('timestamp.seconds_since_epoch')}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ export const TimestampTool: React.FC = () => {
           <button 
             onClick={() => copy(now.toString())}
             className="p-3 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
-            title="Copy"
+            title={t('timestamp.copy')}
           >
             {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
           </button>
@@ -65,11 +65,11 @@ export const TimestampTool: React.FC = () => {
 
       {/* Converter */}
       <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-200 space-y-8">
-        <h3 className="font-semibold text-slate-900 border-b border-slate-100 pb-4">Converter</h3>
+        <h3 className="font-semibold text-slate-900 border-b border-slate-100 pb-4">{t('timestamp.converter')}</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Unix Timestamp (Seconds or MS)</label>
+            <label className="text-sm font-medium text-slate-700">{t('timestamp.unix_timestamp_label')}</label>
             <div className="flex gap-2">
               <input 
                 type="text" 
@@ -81,43 +81,43 @@ export const TimestampTool: React.FC = () => {
                 onClick={() => handleTsChange(now.toString())}
                 className="px-3 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-200"
               >
-                Now
+                {t('timestamp.now')}
               </button>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">ISO 8601 Date</label>
+            <label className="text-sm font-medium text-slate-700">{t('timestamp.iso_date_label')}</label>
             <input 
               type="text"
               value={inputDate}
               onChange={(e) => handleDateChange(e.target.value)}
                className="w-full p-3 rounded-lg border border-slate-300 font-mono text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
             />
-            <p className="text-xs text-slate-500">Format: YYYY-MM-DDTHH:mm:ss.sssZ</p>
+            <p className="text-xs text-slate-500">{t('timestamp.format_hint')}</p>
           </div>
         </div>
 
         <div className="bg-slate-50 rounded-lg p-4 space-y-2">
            <div className="flex justify-between text-sm">
-             <span className="text-slate-500">Local String:</span>
+             <span className="text-slate-500">{t('timestamp.local_string')}</span>
              <span className="font-mono text-slate-800">{new Date(parseInt(inputTs) * 1000).toString()}</span>
            </div>
            <div className="flex justify-between text-sm">
-             <span className="text-slate-500">UTC String:</span>
+             <span className="text-slate-500">{t('timestamp.utc_string')}</span>
              <span className="font-mono text-slate-800">{new Date(parseInt(inputTs) * 1000).toUTCString()}</span>
            </div>
            <div className="flex justify-between text-sm">
-             <span className="text-slate-500">Relative:</span>
+             <span className="text-slate-500">{t('timestamp.relative')}</span>
              <span className="font-mono text-slate-800">
                {(() => {
                  const diff = Date.now() - parseInt(inputTs) * 1000;
                  const seconds = Math.floor(Math.abs(diff) / 1000);
-                 const suffix = diff > 0 ? 'ago' : 'from now';
-                 if (seconds < 60) return `${seconds} seconds ${suffix}`;
-                 if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ${suffix}`;
-                 if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ${suffix}`;
-                 return `${Math.floor(seconds / 86400)} days ${suffix}`;
+                 const suffix = diff > 0 ? t('timestamp.ago') : t('timestamp.from_now');
+                 if (seconds < 60) return `${seconds} ${t('timestamp.seconds')} ${suffix}`;
+                 if (seconds < 3600) return `${Math.floor(seconds / 60)} ${t('timestamp.minutes')} ${suffix}`;
+                 if (seconds < 86400) return `${Math.floor(seconds / 3600)} ${t('timestamp.hours')} ${suffix}`;
+                 return `${Math.floor(seconds / 86400)} ${t('timestamp.days')} ${suffix}`;
                })()}
              </span>
            </div>

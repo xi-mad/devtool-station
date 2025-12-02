@@ -3,6 +3,7 @@ import { Braces, Clock, Palette, Binary, Link, Fingerprint, FileText, Type, Shie
 import CryptoJS from 'crypto-js';
 import { format } from 'sql-formatter';
 import QRCode from 'react-qr-code';
+import { useTranslation } from 'react-i18next';
 
 type DetectedType = 'json' | 'timestamp' | 'color' | 'base64' | 'url' | 'jwt' | 'number' | 'text' | 'unicode' | 'sql' | 'qrcode' | 'unknown';
 
@@ -16,6 +17,7 @@ interface PreviewResult {
 }
 
 export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ onSelectTool }) => {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
   const [results, setResults] = useState<PreviewResult[]>([]);
 
@@ -37,7 +39,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         newResults.push({
           id: 'json',
           type: 'json',
-          label: 'JSON',
+          label: t('quick-preview.labels.json'),
           icon: Braces,
           priority: 100,
           content: (
@@ -59,7 +61,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 newResults.push({
                     id: 'sql',
                     type: 'sql',
-                    label: 'SQL Formatter',
+                    label: t('quick-preview.labels.sql'),
                     icon: Database,
                     priority: 95,
                     content: (
@@ -81,7 +83,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         newResults.push({
           id: 'timestamp',
           type: 'timestamp',
-          label: 'Timestamp',
+          label: t('quick-preview.labels.timestamp'),
           icon: Clock,
           priority: 90,
           content: (
@@ -121,7 +123,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         newResults.push({
             id: 'color',
             type: 'color',
-            label: 'Color',
+            label: t('quick-preview.labels.color'),
             icon: Palette,
             priority: 95,
             content: (
@@ -145,7 +147,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             newResults.push({
                 id: 'jwt',
                 type: 'jwt',
-                label: 'JWT Token',
+                label: t('quick-preview.labels.jwt'),
                 icon: Fingerprint,
                 priority: 100,
                 content: (
@@ -172,7 +174,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 newResults.push({
                     id: 'url',
                     type: 'url',
-                    label: 'URL Decoded',
+                    label: t('quick-preview.labels.url'),
                     icon: Link,
                     priority: 80,
                     content: <div className="break-all font-mono text-slate-900">{decoded}</div>
@@ -191,7 +193,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 newResults.push({
                     id: 'unicode',
                     type: 'unicode',
-                    label: 'Unicode Decoded',
+                    label: t('quick-preview.labels.unicode'),
                     icon: Languages,
                     priority: 85,
                     content: <div className="break-all font-mono text-slate-900">{decoded}</div>
@@ -209,7 +211,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 newResults.push({
                     id: 'base64',
                     type: 'base64',
-                    label: 'Base64 Decoded',
+                    label: t('quick-preview.labels.base64'),
                     icon: Binary,
                     priority: 85,
                     content: <div className="break-all font-mono text-slate-900">{decoded}</div>
@@ -229,7 +231,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             newResults.push({
                 id: 'number',
                 type: 'number',
-                label: 'Number Base',
+                label: t('quick-preview.labels.number'),
                 icon: Hash,
                 priority: 70,
                 content: (
@@ -256,25 +258,25 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
     newResults.push({
         id: 'text-stats',
         type: 'text',
-        label: 'Text Statistics',
+        label: t('quick-preview.labels.text'),
         icon: Type,
         priority: 10,
         content: (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">Characters</span>
+                    <span className="text-xs text-slate-500">{t('quick-preview.stats.characters')}</span>
                     <span className="font-mono font-medium">{val.length}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">Words</span>
+                    <span className="text-xs text-slate-500">{t('quick-preview.stats.words')}</span>
                     <span className="font-mono font-medium">{val.trim() ? val.trim().split(/\s+/).length : 0}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">Lines</span>
+                    <span className="text-xs text-slate-500">{t('quick-preview.stats.lines')}</span>
                     <span className="font-mono font-medium">{val.split(/\r\n|\r|\n/).length}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">Bytes</span>
+                    <span className="text-xs text-slate-500">{t('quick-preview.stats.bytes')}</span>
                     <span className="font-mono font-medium">{new Blob([val]).size}</span>
                 </div>
             </div>
@@ -285,7 +287,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
     newResults.push({
         id: 'qrcode',
         type: 'qrcode',
-        label: 'QR Code',
+        label: t('quick-preview.labels.qrcode'),
         icon: QrCode,
         priority: 5,
         content: (
@@ -303,7 +305,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
     newResults.push({
         id: 'hash',
         type: 'unknown', // Generic
-        label: 'Hashes',
+        label: t('quick-preview.labels.hash'),
         icon: Shield,
         priority: 5,
         content: (
@@ -326,16 +328,16 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
 
     setResults(newResults.sort((a, b) => b.priority - a.priority));
 
-  }, [input]);
+  }, [input, t]);
 
   return (
     <div className="max-w-3xl mx-auto space-y-12 py-12">
       <div className="text-center space-y-4">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
-          Developer Tools, Simplified.
+          {t('quick-preview.title')}
         </h1>
         <p className="text-lg text-slate-500 max-w-xl mx-auto">
-          One input for everything. Paste JSON, timestamps, colors, or base64 to instantly preview and convert.
+          {t('quick-preview.subtitle')}
         </p>
       </div>
 
@@ -345,7 +347,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             <textarea 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Try json, timestamp, color, base64, jwt, or url-encoded text..."
+                placeholder={t('quick-preview.placeholder')}
                 className="relative w-full h-32 md:h-40 p-6 rounded-xl bg-white border border-slate-200 shadow-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 text-lg font-mono resize-none"
             />
              {input && (
@@ -353,7 +355,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                   onClick={() => setInput('')} 
                   className="absolute top-4 right-4 text-xs text-slate-400 hover:text-slate-600 bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm"
                 >
-                  Clear
+                  {t('quick-preview.clear')}
                 </button>
             )}
         </div>
@@ -379,7 +381,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                     ))
                 ) : (
                     <div className="text-slate-400 text-sm italic text-center py-4">
-                        No specific format detected.
+                        {t('quick-preview.no-format')}
                     </div>
                 )}
             </div>
@@ -389,22 +391,22 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
       {/* Quick Links */}
       {!input && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8">
-            <QuickLink icon={Braces} label="JSON" onClick={() => onSelectTool('json-formatter')} />
-            <QuickLink icon={Database} label="SQL Formatter" onClick={() => onSelectTool('sql-formatter')} />
-            <QuickLink icon={Clock} label="Datetime" onClick={() => onSelectTool('timestamp')} />
-            <QuickLink icon={Palette} label="Color" onClick={() => onSelectTool('color-palette')} />
-            <QuickLink icon={Binary} label="Base64" onClick={() => onSelectTool('base64')} />
-            <QuickLink icon={Shield} label="Hash Gen" onClick={() => onSelectTool('hash-generator')} />
-            <QuickLink icon={Link} label="URL Encoding" onClick={() => onSelectTool('url-encoder')} />
-            <QuickLink icon={Fingerprint} label="UUID" onClick={() => onSelectTool('uuid-generator')} /> 
-            <QuickLink icon={Hash} label="Number Base" onClick={() => onSelectTool('number-base')} />
-            <QuickLink icon={FileText} label="Text Diff" onClick={() => onSelectTool('diff-viewer')} />
-            <QuickLink icon={Type} label="Char Counter" onClick={() => onSelectTool('text-inspector')} />
-            <QuickLink icon={Dna} label="Random String" onClick={() => onSelectTool('random-string')} />
-            <QuickLink icon={Languages} label="Unicode" onClick={() => onSelectTool('unicode-converter')} />
-            <QuickLink icon={Fingerprint} label="JWT Decoder" onClick={() => onSelectTool('jwt-decoder')} />
-            <QuickLink icon={QrCode} label="QR Code" onClick={() => onSelectTool('qr-code-generator')} />
-            <QuickLink icon={Maximize2} label="Fullscreen Color" onClick={() => onSelectTool('fullscreen-color')} />
+            <QuickLink icon={Braces} label={t('quick-preview.links.json')} onClick={() => onSelectTool('json-formatter')} />
+            <QuickLink icon={Database} label={t('quick-preview.links.sql')} onClick={() => onSelectTool('sql-formatter')} />
+            <QuickLink icon={Clock} label={t('quick-preview.links.datetime')} onClick={() => onSelectTool('timestamp')} />
+            <QuickLink icon={Palette} label={t('quick-preview.links.color')} onClick={() => onSelectTool('color-palette')} />
+            <QuickLink icon={Binary} label={t('quick-preview.links.base64')} onClick={() => onSelectTool('base64')} />
+            <QuickLink icon={Shield} label={t('quick-preview.links.hash')} onClick={() => onSelectTool('hash-generator')} />
+            <QuickLink icon={Link} label={t('quick-preview.links.url')} onClick={() => onSelectTool('url-encoder')} />
+            <QuickLink icon={Fingerprint} label={t('quick-preview.links.uuid')} onClick={() => onSelectTool('uuid-generator')} /> 
+            <QuickLink icon={Hash} label={t('quick-preview.links.number')} onClick={() => onSelectTool('number-base')} />
+            <QuickLink icon={FileText} label={t('quick-preview.links.diff')} onClick={() => onSelectTool('diff-viewer')} />
+            <QuickLink icon={Type} label={t('quick-preview.links.char-counter')} onClick={() => onSelectTool('text-inspector')} />
+            <QuickLink icon={Dna} label={t('quick-preview.links.random')} onClick={() => onSelectTool('random-string')} />
+            <QuickLink icon={Languages} label={t('quick-preview.links.unicode')} onClick={() => onSelectTool('unicode-converter')} />
+            <QuickLink icon={Fingerprint} label={t('quick-preview.links.jwt')} onClick={() => onSelectTool('jwt-decoder')} />
+            <QuickLink icon={QrCode} label={t('quick-preview.links.qrcode')} onClick={() => onSelectTool('qr-code-generator')} />
+            <QuickLink icon={Maximize2} label={t('quick-preview.links.fullscreen')} onClick={() => onSelectTool('fullscreen-color')} />
         </div>
       )}
     </div>

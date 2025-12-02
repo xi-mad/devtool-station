@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Copy, RefreshCw, Settings, Check, FileText } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 type UuidVersion = 'v1' | 'v4' | 'v7';
 
@@ -78,6 +79,7 @@ const generateV7 = () => {
 
 
 export const UuidGenerator: React.FC = () => {
+  const { t } = useTranslation();
   const [version, setVersion] = useState<UuidVersion>('v4');
   const [quantity, setQuantity] = useState(5);
   const [uppercase, setUppercase] = useState(false);
@@ -111,17 +113,17 @@ export const UuidGenerator: React.FC = () => {
       <div className="w-full md:w-72 flex flex-col bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="flex items-center gap-2 p-6 border-b border-slate-100 bg-slate-50/50">
            <Settings className="text-slate-400" size={20} />
-           <h3 className="font-semibold text-slate-900">Configuration</h3>
+           <h3 className="font-semibold text-slate-900">{t('uuid-generator.configuration')}</h3>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Version</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">{t('uuid-generator.version')}</label>
             <div className="space-y-2">
                {[
-                 { id: 'v1', label: 'Version 1 (Time)', desc: 'Timestamp & Node ID' },
-                 { id: 'v4', label: 'Version 4 (Random)', desc: 'Best for general use' },
-                 { id: 'v7', label: 'Version 7 (Sorted)', desc: 'Time-sortable (Unix)' }
+                 { id: 'v1', label: t('uuid-generator.v1_label'), desc: t('uuid-generator.v1_desc') },
+                 { id: 'v4', label: t('uuid-generator.v4_label'), desc: t('uuid-generator.v4_desc') },
+                 { id: 'v7', label: t('uuid-generator.v7_label'), desc: t('uuid-generator.v7_desc') }
                ].map((opt) => (
                  <button
                    key={opt.id}
@@ -142,7 +144,7 @@ export const UuidGenerator: React.FC = () => {
           </div>
 
           <div>
-             <label className="block text-sm font-medium text-slate-700 mb-2">Quantity: {quantity}</label>
+             <label className="block text-sm font-medium text-slate-700 mb-2">{t('uuid-generator.quantity')}: {quantity}</label>
              <input 
                 type="range" 
                 min="1" 
@@ -165,7 +167,7 @@ export const UuidGenerator: React.FC = () => {
                  onChange={(e) => setUppercase(e.target.checked)}
                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
                />
-               <span className="text-sm text-slate-700">Uppercase</span>
+               <span className="text-sm text-slate-700">{t('uuid-generator.uppercase')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
                <input 
@@ -174,7 +176,7 @@ export const UuidGenerator: React.FC = () => {
                  onChange={(e) => setNoHyphens(e.target.checked)}
                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
                />
-               <span className="text-sm text-slate-700">Remove Hyphens</span>
+               <span className="text-sm text-slate-700">{t('uuid-generator.remove_hyphens')}</span>
             </label>
           </div>
         </div>
@@ -184,7 +186,7 @@ export const UuidGenerator: React.FC = () => {
              onClick={generate}
              className="w-full flex items-center justify-center gap-2 bg-brand-600 text-white py-2.5 rounded-lg hover:bg-brand-700 transition-colors font-medium shadow-sm"
            >
-             <RefreshCw size={18} /> Regenerate
+             <RefreshCw size={18} /> {t('uuid-generator.regenerate')}
            </button>
         </div>
       </div>
@@ -196,14 +198,14 @@ export const UuidGenerator: React.FC = () => {
              <div className="bg-brand-100 text-brand-700 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide">
                UUID {version.toUpperCase()}
              </div>
-             <span className="text-sm text-slate-500">{uuids.length} generated</span>
+             <span className="text-sm text-slate-500">{uuids.length} {t('uuid-generator.generated')}</span>
            </div>
             <button 
                onClick={() => copy(uuids.join('\n'), 'all')}
                className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-600 px-3 py-1.5 rounded-lg hover:bg-white border border-transparent hover:border-slate-200 transition-all"
             >
               {isCopied('all') ? <Check size={16} /> : <FileText size={16} />}
-              Copy All
+              {t('uuid-generator.copy_all')}
             </button>
          </div>
 

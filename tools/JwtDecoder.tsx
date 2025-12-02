@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Fingerprint, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 export const JwtDecoder: React.FC = () => {
+  const { t } = useTranslation();
   const [token, setToken] = useState('');
   const [header, setHeader] = useState('{\n  "alg": "HS256",\n  "typ": "JWT"\n}');
   const [payload, setPayload] = useState('{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": 1516239022\n}');
@@ -29,7 +31,7 @@ export const JwtDecoder: React.FC = () => {
       setPayload(JSON.stringify(JSON.parse(decodedPayload), null, 2));
       setSignature(parts[2]);
     } catch (e) {
-      setError('Invalid JWT token');
+      setError(t('jwt-decoder.error_invalid'));
     }
   };
 
@@ -113,14 +115,14 @@ export const JwtDecoder: React.FC = () => {
             <Fingerprint size={20} />
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900">JWT Debugger</h3>
-            <p className="text-xs text-slate-500">Decode & Encode JSON Web Tokens</p>
+            <h3 className="font-semibold text-slate-900">{t('jwt-decoder.title')}</h3>
+            <p className="text-xs text-slate-500">{t('jwt-decoder.subtitle')}</p>
           </div>
         </div>
         <button 
           onClick={() => { setToken(''); setHeader('{}'); setPayload('{}'); setSignature(''); setError(null); }}
           className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-          title="Clear All"
+          title={t('jwt-decoder.clear_all')}
         >
           <Trash2 size={18} />
         </button>
@@ -130,19 +132,19 @@ export const JwtDecoder: React.FC = () => {
         {/* Left: Token Input */}
         <div className="flex flex-col gap-2 h-full">
             <div className="flex justify-between items-center">
-                <label className="text-sm font-medium text-slate-700">Encoded Token</label>
+                <label className="text-sm font-medium text-slate-700">{t('jwt-decoder.encoded_token')}</label>
                 <button 
                     onClick={() => copy(token, 'token')}
                     className="text-xs flex items-center gap-1 text-slate-500 hover:text-brand-600 transition-colors"
                 >
                     {isCopied('token') ? <Check size={14} /> : <Copy size={14} />}
-                    {isCopied('token') ? 'Copied' : 'Copy'}
+                    {isCopied('token') ? t('jwt-decoder.copied') : t('jwt-decoder.copy')}
                 </button>
             </div>
             <textarea
                 value={token}
                 onChange={(e) => handleTokenChange(e.target.value)}
-                placeholder="Paste JWT here (ey...)"
+                placeholder={t('jwt-decoder.placeholder_token')}
                 className={`flex-1 p-4 rounded-xl border font-mono text-sm resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all ${
                     error ? 'border-red-300 bg-red-50/10' : 'border-slate-200'
                 }`}
@@ -155,8 +157,8 @@ export const JwtDecoder: React.FC = () => {
             {/* Header */}
             <div className="flex-1 flex flex-col gap-2 min-h-0">
                 <div className="flex justify-between items-center">
-                    <label className="text-sm font-medium text-slate-700">Header</label>
-                    <span className="text-xs text-slate-400">Algorithm & Token Type</span>
+                    <label className="text-sm font-medium text-slate-700">{t('jwt-decoder.header')}</label>
+                    <span className="text-xs text-slate-400">{t('jwt-decoder.header_desc')}</span>
                 </div>
                 <textarea
                     value={header}
@@ -168,8 +170,8 @@ export const JwtDecoder: React.FC = () => {
             {/* Payload */}
             <div className="flex-[2] flex flex-col gap-2 min-h-0">
                 <div className="flex justify-between items-center">
-                    <label className="text-sm font-medium text-slate-700">Payload</label>
-                    <span className="text-xs text-slate-400">Data & Claims</span>
+                    <label className="text-sm font-medium text-slate-700">{t('jwt-decoder.payload')}</label>
+                    <span className="text-xs text-slate-400">{t('jwt-decoder.payload_desc')}</span>
                 </div>
                 <textarea
                     value={payload}
@@ -180,9 +182,9 @@ export const JwtDecoder: React.FC = () => {
             
             {/* Signature (Read Only) */}
              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Signature</label>
+                <label className="text-sm font-medium text-slate-700">{t('jwt-decoder.signature')}</label>
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-500 break-all">
-                    {signature || <span className="italic opacity-50">No signature present</span>}
+                    {signature || <span className="italic opacity-50">{t('jwt-decoder.no_signature')}</span>}
                 </div>
             </div>
         </div>

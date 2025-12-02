@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { TOOLS } from './components/Sidebar'; // Importing definition
 import { Layout } from './components/ui/Layout';
 import { ToolId } from './types';
+import { useTranslation } from 'react-i18next';
 
 // Tools
 import { QuickPreview } from './tools/QuickPreview';
@@ -24,6 +25,7 @@ import { JwtDecoder } from './tools/JwtDecoder';
 import { QrCodeGenerator } from './tools/QrCodeGenerator';
 
 const App: React.FC = () => {
+  const { t } = useTranslation();
   const [activeToolId, setActiveToolId] = useState<ToolId>(ToolId.QUICK_PREVIEW);
 
   const activeToolDef = TOOLS.find(t => t.id === activeToolId);
@@ -59,8 +61,8 @@ const App: React.FC = () => {
       />
       
       <Layout 
-        title={activeToolId !== ToolId.QUICK_PREVIEW ? activeToolDef?.name : undefined}
-        description={activeToolId !== ToolId.QUICK_PREVIEW ? activeToolDef?.description : undefined}
+        title={activeToolId !== ToolId.QUICK_PREVIEW ? t(`tools.${activeToolId}.name`) : undefined}
+        description={activeToolId !== ToolId.QUICK_PREVIEW ? t(`tools.${activeToolId}.description`) : undefined}
       >
         {renderTool()}
       </Layout>

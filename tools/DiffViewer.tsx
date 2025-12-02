@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import * as Diff from 'diff'; 
 import { AlertCircle, Columns, FileDiff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type DiffMethod = 'chars' | 'words' | 'lines' | 'json';
 type ViewMode = 'unified' | 'split';
 
 export const DiffViewer: React.FC = () => {
+  const { t } = useTranslation();
   const [left, setLeft] = useState('');
   const [right, setRight] = useState('');
   const [method, setMethod] = useState<DiffMethod>('lines');
@@ -28,7 +30,7 @@ export const DiffViewer: React.FC = () => {
         } catch (e) {
           // If not valid JSON, fallback to line diff but show warning
           result = Diff.diffLines(left, right);
-          setError("Invalid JSON in one or both inputs. Showing line diff instead.");
+          setError(t('diff-viewer.invalid_json'));
         }
       } else if (method === 'chars') {
         result = Diff.diffChars(left, right);
@@ -42,7 +44,7 @@ export const DiffViewer: React.FC = () => {
       console.error(e);
       setDiffResult([]);
     }
-  }, [left, right, method]);
+  }, [left, right, method, t]);
 
   const renderUnified = () => (
     <pre className="whitespace-pre-wrap break-all font-mono text-sm leading-6">
@@ -67,7 +69,7 @@ export const DiffViewer: React.FC = () => {
       <div className="overflow-auto border-r border-slate-100 pr-2">
          <div className="sticky top-0 bg-white/95 backdrop-blur z-10 border-b border-slate-100 pb-2 mb-2">
             <span className="text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1">
-              Original
+              {t('diff-viewer.original')}
             </span>
          </div>
          <pre className="whitespace-pre-wrap break-all font-mono text-sm leading-6">
@@ -87,7 +89,7 @@ export const DiffViewer: React.FC = () => {
       <div className="overflow-auto pl-2">
          <div className="sticky top-0 bg-white/95 backdrop-blur z-10 border-b border-slate-100 pb-2 mb-2">
             <span className="text-xs font-bold text-green-600 uppercase tracking-wider flex items-center gap-1">
-              Modified
+              {t('diff-viewer.modified')}
             </span>
          </div>
          <pre className="whitespace-pre-wrap break-all font-mono text-sm leading-6">
@@ -121,7 +123,7 @@ export const DiffViewer: React.FC = () => {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}
               `}
             >
-              {m} Diff
+              {m} {t('diff-viewer.diff_suffix')}
             </button>
           ))}
         </div>
@@ -137,18 +139,18 @@ export const DiffViewer: React.FC = () => {
                 <button
                     onClick={() => setViewMode('unified')}
                     className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'unified' ? 'bg-white text-brand-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                    title="Unified View"
+                    title={t('diff-viewer.unified_view')}
                 >
                     <FileDiff size={16} />
-                    <span className="text-xs font-medium">Unified</span>
+                    <span className="text-xs font-medium">{t('diff-viewer.unified')}</span>
                 </button>
                 <button
                     onClick={() => setViewMode('split')}
                     className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'split' ? 'bg-white text-brand-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                    title="Split View"
+                    title={t('diff-viewer.split_view')}
                 >
                     <Columns size={16} />
-                    <span className="text-xs font-medium">Split</span>
+                    <span className="text-xs font-medium">{t('diff-viewer.split')}</span>
                 </button>
             </div>
         </div>
@@ -158,27 +160,27 @@ export const DiffViewer: React.FC = () => {
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 min-h-0">
         <div className="flex flex-col gap-2 h-full">
             <span className="text-xs font-semibold text-slate-500 uppercase flex justify-between">
-                <span>Original Text</span>
-                <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">Input A</span>
+                <span>{t('diff-viewer.original_text')}</span>
+                <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">{t('diff-viewer.input_a')}</span>
             </span>
             <textarea
                 value={left}
                 onChange={(e) => setLeft(e.target.value)}
                 className="flex-1 w-full p-4 rounded-xl border border-slate-200 font-mono text-xs md:text-sm resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all"
-                placeholder="Paste original text here..."
+                placeholder={t('diff-viewer.paste_original')}
                 spellCheck={false}
             />
         </div>
         <div className="flex flex-col gap-2 h-full">
             <span className="text-xs font-semibold text-slate-500 uppercase flex justify-between">
-                 <span>Changed Text</span>
-                 <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">Input B</span>
+                 <span>{t('diff-viewer.changed_text')}</span>
+                 <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">{t('diff-viewer.input_b')}</span>
             </span>
              <textarea
                 value={right}
                 onChange={(e) => setRight(e.target.value)}
                 className="flex-1 w-full p-4 rounded-xl border border-slate-200 font-mono text-xs md:text-sm resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all"
-                placeholder="Paste changed text here..."
+                placeholder={t('diff-viewer.paste_changed')}
                 spellCheck={false}
             />
         </div>
@@ -187,18 +189,18 @@ export const DiffViewer: React.FC = () => {
       {/* Result Area */}
       <div className="h-1/3 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[200px]">
         <div className="bg-slate-50 border-b border-slate-100 px-4 py-2 flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase">Comparison Result</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase">{t('diff-viewer.comparison_result')}</span>
             <span className="text-[10px] text-slate-400 font-mono">
-                {diffResult.filter(r => r.added).length} insertions, {diffResult.filter(r => r.removed).length} deletions
+                {diffResult.filter(r => r.added).length} {t('diff-viewer.insertions')}, {diffResult.filter(r => r.removed).length} {t('diff-viewer.deletions')}
             </span>
         </div>
         <div className="flex-1 overflow-auto p-4">
             {diffResult.length === 0 && (left || right) ? (
-                <span className="text-slate-400 italic text-sm">Computing diff...</span>
+                <span className="text-slate-400 italic text-sm">{t('diff-viewer.computing')}</span>
             ) : !left && !right ? (
                 <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-2">
                     <FileDiff size={32} className="opacity-20" />
-                    <span className="text-sm italic">Enter text in both fields above to compare</span>
+                    <span className="text-sm italic">{t('diff-viewer.empty_state')}</span>
                 </div>
             ) : (
                 viewMode === 'split' ? renderSplit() : renderUnified()

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 // Helpers
 const hexToRgb = (hex: string) => {
@@ -65,6 +66,7 @@ const TAILWIND_COLORS = {
 };
 
 export const ColorTool: React.FC = () => {
+  const { t } = useTranslation();
   const [hex, setHex] = useState('#3b82f6');
   const [rgb, setRgb] = useState({ r: 59, g: 130, b: 246 });
   const { copy, isCopied } = useCopy();
@@ -152,7 +154,7 @@ export const ColorTool: React.FC = () => {
 
       {/* Generated Palette */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900">Generated Palette</h3>
+        <h3 className="text-lg font-semibold text-slate-900">{t('color-tool.generated_palette')}</h3>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div className="grid grid-cols-5 sm:grid-cols-11 gap-2">
                 {Object.entries(generatedPalette).map(([weight, color]) => (
@@ -179,7 +181,7 @@ export const ColorTool: React.FC = () => {
 
       {/* Common Palettes */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900">Common Palettes</h3>
+        <h3 className="text-lg font-semibold text-slate-900">{t('color-tool.common_palettes')}</h3>
         <div className="grid grid-cols-1 gap-6">
           {Object.entries(TAILWIND_COLORS).map(([name, colors]) => (
              <div key={name} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">

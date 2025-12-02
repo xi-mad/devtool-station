@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Maximize2, X, Copy, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 export const FullscreenColor: React.FC = () => {
+  const { t } = useTranslation();
   const [color, setColor] = useState('#3b82f6');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
@@ -72,19 +74,19 @@ export const FullscreenColor: React.FC = () => {
           />
           <div className="text-white">
             <div className="text-2xl font-bold font-mono uppercase">{color}</div>
-            <div className="text-sm opacity-80">Click to change color</div>
+            <div className="text-sm opacity-80">{t('fullscreen-color.click_to_change')}</div>
           </div>
           <button
             onClick={() => copy(color)}
             className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors cursor-pointer"
-            title="Copy color"
+            title={t('fullscreen-color.copy_color')}
           >
             {isCopied() ? <Check size={20} className="text-white" /> : <Copy size={20} className="text-white" />}
           </button>
           <button
             onClick={toggleFullscreen}
             className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors cursor-pointer"
-            title="Exit fullscreen"
+            title={t('fullscreen-color.exit_fullscreen')}
           >
             <X size={20} className="text-white" />
           </button>
@@ -101,8 +103,8 @@ export const FullscreenColor: React.FC = () => {
             <Maximize2 size={20} />
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900">Fullscreen Color Display</h3>
-            <p className="text-xs text-slate-500">Choose a color and view it in fullscreen</p>
+            <h3 className="font-semibold text-slate-900">{t('fullscreen-color.title')}</h3>
+            <p className="text-xs text-slate-500">{t('fullscreen-color.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -144,14 +146,14 @@ export const FullscreenColor: React.FC = () => {
                   className="w-full flex items-center justify-center gap-2 bg-brand-600 text-white py-3 rounded-lg hover:bg-brand-700 transition-colors font-medium shadow-sm"
                 >
                   <Maximize2 size={20} />
-                  Enter Fullscreen
+                  {t('fullscreen-color.enter_fullscreen')}
                 </button>
               </div>
             </div>
 
             {/* Quick Colors */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-3">Quick Colors</label>
+              <label className="block text-sm font-medium text-slate-700 mb-3">{t('fullscreen-color.quick_colors')}</label>
               <div className="grid grid-cols-8 gap-2">
                 {[
                   '#ef4444', '#f97316', '#f59e0b', '#eab308', 

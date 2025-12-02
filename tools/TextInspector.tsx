@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { Type, Hash, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 export const TextInspector: React.FC = () => {
+  const { t } = useTranslation();
   const [text, setText] = useState('');
   const { copy, isCopied } = useCopy();
 
@@ -63,26 +65,26 @@ export const TextInspector: React.FC = () => {
       <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2">
          <div className="flex items-center gap-2 px-3 border-r border-slate-100 mr-1">
              <Type size={18} className="text-slate-400" />
-             <span className="text-sm font-medium text-slate-600">Case</span>
+             <span className="text-sm font-medium text-slate-600">{t('text-inspector.case')}</span>
          </div>
          <button onClick={() => transform('upper')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors uppercase">
-            UPPERCASE
+            {t('text-inspector.uppercase')}
          </button>
          <button onClick={() => transform('lower')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors lowercase">
-            lowercase
+            {t('text-inspector.lowercase')}
          </button>
          <button onClick={() => transform('title')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors capitalize">
-            Title Case
+            {t('text-inspector.title_case')}
          </button>
          <div className="w-px h-6 bg-slate-200 mx-1"></div>
          <button onClick={() => transform('camel')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors">
-            camelCase
+            {t('text-inspector.camel_case')}
          </button>
          <button onClick={() => transform('snake')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors">
-            snake_case
+            {t('text-inspector.snake_case')}
          </button>
           <button onClick={() => transform('kebab')} className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-brand-600 rounded-lg border border-slate-200 transition-colors">
-             kebab-case
+             {t('text-inspector.kebab_case')}
           </button>
           
           <div className="flex-1"></div>
@@ -107,12 +109,12 @@ export const TextInspector: React.FC = () => {
            <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Type or paste text here to inspect..."
+            placeholder={t('text-inspector.placeholder')}
             className="w-full h-full p-6 rounded-xl border border-slate-200 font-mono text-sm leading-6 resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all"
             spellCheck={false}
           />
           <div className="absolute bottom-4 right-4 text-xs text-slate-400 pointer-events-none">
-            {text.length > 0 ? 'Typing...' : 'Empty'}
+            {text.length > 0 ? t('text-inspector.typing') : t('text-inspector.empty')}
           </div>
         </div>
 
@@ -121,21 +123,21 @@ export const TextInspector: React.FC = () => {
            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="bg-slate-50 px-4 py-3 border-b border-slate-100 flex items-center gap-2">
                  <Hash size={16} className="text-slate-400" />
-                 <h3 className="font-semibold text-slate-700 text-sm">Statistics</h3>
+                 <h3 className="font-semibold text-slate-700 text-sm">{t('text-inspector.statistics')}</h3>
               </div>
               <div className="divide-y divide-slate-100">
-                 <StatRow label="Characters" value={stats.chars} />
-                 <StatRow label="Words" value={stats.words} />
-                 <StatRow label="Lines" value={stats.lines} />
-                 <StatRow label="Bytes" value={stats.bytes} suffix=" B" />
-                 <StatRow label="No Spaces" value={stats.charsNoSpaces} />
+                 <StatRow label={t('text-inspector.characters')} value={stats.chars} />
+                 <StatRow label={t('text-inspector.words')} value={stats.words} />
+                 <StatRow label={t('text-inspector.lines')} value={stats.lines} />
+                 <StatRow label={t('text-inspector.bytes')} value={stats.bytes} suffix=" B" />
+                 <StatRow label={t('text-inspector.no_spaces')} value={stats.charsNoSpaces} />
               </div>
            </div>
 
            <div className="bg-brand-50 rounded-xl p-4 border border-brand-100">
-              <h4 className="text-brand-800 text-xs font-bold uppercase tracking-wider mb-2">Details</h4>
+              <h4 className="text-brand-800 text-xs font-bold uppercase tracking-wider mb-2">{t('text-inspector.details')}</h4>
               <p className="text-xs text-brand-600 leading-relaxed">
-                 Use the toolbar above to convert case formats. Byte count assumes UTF-8 encoding.
+                 {t('text-inspector.details_text')}
               </p>
            </div>
         </div>

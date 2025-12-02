@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 type Base = 'decimal' | 'hex' | 'binary' | 'octal';
 
 export const NumberBase: React.FC = () => {
+  const { t } = useTranslation();
   const { copy, isCopied } = useCopy();
   const [values, setValues] = useState({
     decimal: '',
@@ -53,7 +55,7 @@ export const NumberBase: React.FC = () => {
       <div className="grid grid-cols-1 gap-6">
         
         <BaseInput 
-          label="Decimal" 
+          label={t('number-base.decimal')}
           value={values.decimal} 
           onChange={(v) => update(v, 'decimal')} 
           placeholder="12345"
@@ -63,7 +65,7 @@ export const NumberBase: React.FC = () => {
         />
 
         <BaseInput 
-          label="Hexadecimal" 
+          label={t('number-base.hexadecimal')}
           value={values.hex} 
           onChange={(v) => update(v, 'hex')} 
           placeholder="3039"
@@ -73,7 +75,7 @@ export const NumberBase: React.FC = () => {
         />
 
         <BaseInput 
-          label="Binary" 
+          label={t('number-base.binary')}
           value={values.binary} 
           onChange={(v) => update(v, 'binary')} 
           placeholder="11000000111001"
@@ -83,7 +85,7 @@ export const NumberBase: React.FC = () => {
         />
 
         <BaseInput 
-          label="Octal" 
+          label={t('number-base.octal')}
           value={values.octal} 
           onChange={(v) => update(v, 'octal')} 
           placeholder="30071"

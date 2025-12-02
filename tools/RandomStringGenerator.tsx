@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dna, RefreshCw, Copy, Check, Settings } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
+import { useTranslation } from 'react-i18next';
 
 export const RandomStringGenerator: React.FC = () => {
+  const { t } = useTranslation();
   const [length, setLength] = useState(16);
   const [useUppercase, setUseUppercase] = useState(true);
   const [useLowercase, setUseLowercase] = useState(true);
@@ -49,13 +51,13 @@ export const RandomStringGenerator: React.FC = () => {
       <div className="w-full md:w-72 flex flex-col gap-6 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <div className="flex items-center gap-2 pb-4 border-b border-slate-100">
            <Settings className="text-slate-400" size={20} />
-           <h3 className="font-semibold text-slate-900">Configuration</h3>
+           <h3 className="font-semibold text-slate-900">{t('random-string.configuration')}</h3>
         </div>
 
         <div className="space-y-6">
           <div>
              <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-slate-700">Length</label>
+                <label className="text-sm font-medium text-slate-700">{t('random-string.length')}</label>
                 <input 
                   type="number" 
                   min="1" 
@@ -91,7 +93,7 @@ export const RandomStringGenerator: React.FC = () => {
                  onChange={(e) => setUseUppercase(e.target.checked)}
                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
                />
-               <span className="text-sm text-slate-700">Uppercase (A-Z)</span>
+               <span className="text-sm text-slate-700">{t('random-string.uppercase_az')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
                <input 
@@ -100,7 +102,7 @@ export const RandomStringGenerator: React.FC = () => {
                  onChange={(e) => setUseLowercase(e.target.checked)}
                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
                />
-               <span className="text-sm text-slate-700">Lowercase (a-z)</span>
+               <span className="text-sm text-slate-700">{t('random-string.lowercase_az')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
                <input 
@@ -109,7 +111,7 @@ export const RandomStringGenerator: React.FC = () => {
                  onChange={(e) => setUseNumbers(e.target.checked)}
                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
                />
-               <span className="text-sm text-slate-700">Numbers (0-9)</span>
+               <span className="text-sm text-slate-700">{t('random-string.numbers_09')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
                <input 
@@ -118,7 +120,7 @@ export const RandomStringGenerator: React.FC = () => {
                  onChange={(e) => setUseSymbols(e.target.checked)}
                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
                />
-               <span className="text-sm text-slate-700">Symbols (!@#...)</span>
+               <span className="text-sm text-slate-700">{t('random-string.symbols')}</span>
             </label>
           </div>
         </div>
@@ -128,7 +130,7 @@ export const RandomStringGenerator: React.FC = () => {
              onClick={generate}
              className="w-full flex items-center justify-center gap-2 bg-brand-600 text-white py-2.5 rounded-lg hover:bg-brand-700 transition-colors font-medium shadow-sm"
            >
-             <RefreshCw size={18} /> Regenerate
+             <RefreshCw size={18} /> {t('random-string.regenerate')}
            </button>
         </div>
       </div>
@@ -137,7 +139,7 @@ export const RandomStringGenerator: React.FC = () => {
       <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col min-h-0 overflow-hidden">
          <div className="p-4 border-b border-slate-100 flex items-center gap-2 bg-slate-50/50">
             <Dna size={16} className="text-slate-500" />
-            <span className="text-xs font-bold uppercase text-slate-500">Generated String</span>
+            <span className="text-xs font-bold uppercase text-slate-500">{t('random-string.generated_string')}</span>
          </div>
          <div className="flex-1 p-6 flex items-center justify-center">
             <div className="w-full max-w-2xl relative group">
@@ -151,7 +153,7 @@ export const RandomStringGenerator: React.FC = () => {
                         <button 
                             onClick={() => copy(result)}
                             className="p-2 bg-white text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-lg shadow-sm border border-slate-200 transition-all"
-                            title="Copy"
+                            title={t('random-string.copy')}
                         >
                             {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
                         </button>

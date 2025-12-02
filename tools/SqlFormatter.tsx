@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Database, Play, Copy, Trash2, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 import { format } from 'sql-formatter';
+import { useTranslation } from 'react-i18next';
 
 export const SqlFormatter: React.FC = () => {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
   const { copy, isCopied } = useCopy();
   
@@ -35,32 +37,32 @@ export const SqlFormatter: React.FC = () => {
             <div className="p-2 bg-brand-50 text-brand-600 rounded-lg">
                 <Database size={18} />
             </div>
-            <span className="font-semibold text-slate-700">SQL Formatter</span>
+            <span className="font-semibold text-slate-700">{t('sql-formatter.title')}</span>
          </div>
          <div className="flex gap-2">
             <button 
                 onClick={formatSql}
                 className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white text-sm font-medium rounded-lg hover:bg-brand-700 transition-colors shadow-sm"
             >
-                <Play size={16} /> Format
+                <Play size={16} /> {t('sql-formatter.format')}
             </button>
             <button 
                 onClick={compressSql}
                 className="px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
             >
-                Minify
+                {t('sql-formatter.minify')}
             </button>
             <button 
                 onClick={() => copy(input)}
                 className="p-2 text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors border border-transparent hover:border-brand-100"
-                title="Copy"
+                title={t('sql-formatter.copy')}
             >
                 {isCopied() ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
             </button>
             <button 
                 onClick={() => setInput('')}
                 className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
-                title="Clear"
+                title={t('sql-formatter.clear')}
             >
                 <Trash2 size={18} />
             </button>
@@ -71,7 +73,7 @@ export const SqlFormatter: React.FC = () => {
          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="PASTE YOUR SQL HERE..."
+            placeholder={t('sql-formatter.placeholder')}
             className="w-full h-full p-6 rounded-xl border border-slate-200 font-mono text-sm leading-6 text-slate-800 resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm"
             spellCheck={false}
          />
