@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, ArrowDownUp, AlertCircle, Copy, Check, Trash2 } from 'lucide-react';
+import { Link, AlertCircle, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 
 type EncodeMode = 'component' | 'uri';

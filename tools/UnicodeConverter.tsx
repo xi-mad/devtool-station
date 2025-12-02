@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Languages, ArrowRightLeft, Copy, Check, Trash2 } from 'lucide-react';
+import { Languages, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 
 export const UnicodeConverter: React.FC = () => {

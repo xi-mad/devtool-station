@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Fingerprint, Copy, Check, Trash2, ArrowRight } from 'lucide-react';
+import { Fingerprint, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 
 export const JwtDecoder: React.FC = () => {

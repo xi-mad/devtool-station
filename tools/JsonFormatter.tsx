@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Copy, Trash2, CheckCircle, AlertCircle, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 
@@ -7,7 +7,7 @@ export const JsonFormatter: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { copy, isCopied } = useCopy();
 
-  const formatJson = useCallback(() => {
+  const formatJson = () => {
     if (!input.trim()) return;
     try {
       const parsed = JSON.parse(input);
@@ -20,9 +20,9 @@ export const JsonFormatter: React.FC = () => {
         setError("Invalid JSON");
       }
     }
-  }, [input]);
+  };
 
-  const compressJson = useCallback(() => {
+  const compressJson = () => {
     if (!input.trim()) return;
     try {
       const parsed = JSON.parse(input);
@@ -33,7 +33,7 @@ export const JsonFormatter: React.FC = () => {
         setError(e.message);
       }
     }
-  }, [input]);
+  };
 
   const clear = () => {
     setInput('');

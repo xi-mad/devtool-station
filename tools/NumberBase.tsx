@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Hash, Copy, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 
 type Base = 'decimal' | 'hex' | 'binary' | 'octal';

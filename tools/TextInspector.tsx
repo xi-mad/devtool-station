@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Type, AlignLeft, Hash, ArrowRight, Copy, Check, Trash2 } from 'lucide-react';
+import { Type, Hash, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 
 export const TextInspector: React.FC = () => {
