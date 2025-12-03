@@ -42,10 +42,61 @@ export const JsonFormatter: React.FC = () => {
     setError(null);
   };
 
+  const removeNewlines = () => {
+    if (!input.trim()) return;
+    // Remove literal \n characters (the two-character sequence backslash-n)
+    const cleaned = input.replace(/\\n/g, '');
+    setInput(cleaned);
+    setError(null);
+  };
+
+  const addEscape = () => {
+    if (!input.trim()) return;
+    try {
+      // First parse to validate JSON, then stringify with escaping
+      const parsed = JSON.parse(input);
+      const escaped = JSON.stringify(JSON.stringify(parsed));
+      // Remove the outer quotes added by double stringify
+      setInput(escaped.slice(1, -1));
+      setError(null);
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+      }
+    }
+  };
+
+  const removeEscape = () => {
+    if (!input.trim()) return;
+    try {
+      // Directly unescape the string without requiring valid JSON
+      // Wrap in quotes and parse to handle escape sequences
+      const unescaped = JSON.parse(`"${input}"`);
+      setInput(unescaped);
+      setError(null);
+    } catch (e) {
+      // If that fails, try manual replacement of common escape sequences
+      try {
+        let result = input
+          .replace(/\\n/g, '\n')
+          .replace(/\\r/g, '\r')
+          .replace(/\\t/g, '\t')
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\');
+        setInput(result);
+        setError(null);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+      }
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[calc(100vh-180px)]">
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-2 items-center justify-between bg-slate-50 rounded-t-xl">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button 
             onClick={formatJson}
             className="px-4 py-2 bg-brand-600 text-white text-sm font-medium rounded-lg hover:bg-brand-700 transition-colors shadow-sm"
@@ -57,6 +108,27 @@ export const JsonFormatter: React.FC = () => {
             className="px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
           >
             {t('json-formatter.compress')}
+          </button>
+          <button 
+            onClick={removeNewlines}
+            className="px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+            title="Remove literal \n characters"
+          >
+            {t('json-formatter.remove_newlines')}
+          </button>
+          <button 
+            onClick={addEscape}
+            className="px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+            title="Add escape sequences"
+          >
+            {t('json-formatter.add_escape')}
+          </button>
+          <button 
+            onClick={removeEscape}
+            className="px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+            title="Remove escape sequences"
+          >
+            {t('json-formatter.remove_escape')}
           </button>
         </div>
         <div className="flex gap-2">

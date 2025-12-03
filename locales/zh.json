@@ -79,7 +79,10 @@
     "copy": "复制",
     "clear": "清空",
     "placeholder": "在此粘贴您的 JSON...",
-    "valid_json": "有效的 JSON"
+    "valid_json": "有效的 JSON",
+    "remove_newlines": "去除 \\n",
+    "add_escape": "添加转义",
+    "remove_escape": "去除转义"
   },
   "timestamp": {
     "current_unix_timestamp": "当前 Unix 时间戳",

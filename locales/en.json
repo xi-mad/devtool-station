@@ -79,7 +79,10 @@
     "copy": "Copy",
     "clear": "Clear",
     "placeholder": "Paste your JSON here...",
-    "valid_json": "Valid JSON"
+    "valid_json": "Valid JSON",
+    "remove_newlines": "Remove \\n",
+    "add_escape": "Add Escape",
+    "remove_escape": "Remove Escape"
   },
   "timestamp": {
     "current_unix_timestamp": "Current Unix Timestamp",
