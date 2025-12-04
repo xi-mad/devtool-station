@@ -3,6 +3,7 @@ import { Database, Play, Copy, Trash2, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 import { format } from 'sql-formatter';
 import { useTranslation } from 'react-i18next';
+import { CodeEditor } from '../components/CodeEditor';
 
 export const SqlFormatter: React.FC = () => {
   const { t } = useTranslation();
@@ -69,13 +70,13 @@ export const SqlFormatter: React.FC = () => {
          </div>
       </div>
 
-      <div className="flex-1">
-         <textarea
+      <div className="flex-1 relative">
+         <CodeEditor
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={setInput}
+            language="sql"
             placeholder={t('sql-formatter.placeholder')}
-            className="w-full h-full p-6 rounded-xl border border-slate-200 font-mono text-sm leading-6 text-slate-800 resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm"
-            spellCheck={false}
+            className="w-full h-full rounded-xl border border-slate-200 shadow-sm bg-white"
          />
       </div>
     </div>

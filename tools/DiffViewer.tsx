@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as Diff from 'diff'; 
 import { AlertCircle, Columns, FileDiff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { CodeEditor } from '../components/CodeEditor';
 
 type DiffMethod = 'chars' | 'words' | 'lines' | 'json';
 type ViewMode = 'unified' | 'split';
@@ -163,12 +164,12 @@ export const DiffViewer: React.FC = () => {
                 <span>{t('diff-viewer.original_text')}</span>
                 <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">{t('diff-viewer.input_a')}</span>
             </span>
-            <textarea
+            <CodeEditor
                 value={left}
-                onChange={(e) => setLeft(e.target.value)}
-                className="flex-1 w-full p-4 rounded-xl border border-slate-200 font-mono text-xs md:text-sm resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all"
+                onChange={setLeft}
+                language={method === 'json' ? 'json' : 'text'}
+                className="flex-1 w-full h-full border border-slate-200 rounded-xl shadow-sm bg-white"
                 placeholder={t('diff-viewer.paste_original')}
-                spellCheck={false}
             />
         </div>
         <div className="flex flex-col gap-2 h-full">
@@ -176,12 +177,12 @@ export const DiffViewer: React.FC = () => {
                  <span>{t('diff-viewer.changed_text')}</span>
                  <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">{t('diff-viewer.input_b')}</span>
             </span>
-             <textarea
+             <CodeEditor
                 value={right}
-                onChange={(e) => setRight(e.target.value)}
-                className="flex-1 w-full p-4 rounded-xl border border-slate-200 font-mono text-xs md:text-sm resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all"
+                onChange={setRight}
+                language={method === 'json' ? 'json' : 'text'}
+                className="flex-1 w-full h-full border border-slate-200 rounded-xl shadow-sm bg-white"
                 placeholder={t('diff-viewer.paste_changed')}
-                spellCheck={false}
             />
         </div>
       </div>

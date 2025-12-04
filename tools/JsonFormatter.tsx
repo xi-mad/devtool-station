@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Copy, Trash2, CheckCircle, AlertCircle, Check } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 import { useTranslation } from 'react-i18next';
+import { CodeEditor } from '../components/CodeEditor';
 
 export const JsonFormatter: React.FC = () => {
   const { t } = useTranslation();
@@ -150,12 +151,12 @@ export const JsonFormatter: React.FC = () => {
       </div>
       
       <div className="relative flex-1">
-        <textarea
+        <CodeEditor
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={setInput}
+          language="json"
           placeholder={t('json-formatter.placeholder')}
-          className="w-full h-full p-4 font-mono text-sm text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500/50"
-          spellCheck={false}
+          className="w-full h-full rounded-xl border border-slate-200 shadow-sm bg-white"
         />
         {error && (
           <div className="absolute bottom-4 left-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-2 text-sm shadow-sm animate-in fade-in slide-in-from-bottom-2">
