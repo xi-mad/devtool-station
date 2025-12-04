@@ -47,7 +47,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   return (
-    <div className={`relative font-mono text-sm ${className}`}>
+    <div 
+      className={`relative font-mono text-sm focus-within:ring-2 focus-within:ring-brand-500/50 focus-within:border-brand-500 transition-all ${className}`}
+    >
       {/* Highlighted Code (Background) */}
       <pre
         ref={preRef}
@@ -82,7 +84,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         onScroll={handleScroll}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500/50 z-10 whitespace-pre-wrap break-all ${readOnly ? 'cursor-default' : ''}`}
+        className={`absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-slate-800 resize-none focus:outline-none z-10 whitespace-pre-wrap break-all rounded-[inherit] ${readOnly ? 'cursor-default' : ''}`}
         spellCheck={false}
         style={{
             fontFamily: '"JetBrains Mono", monospace',
