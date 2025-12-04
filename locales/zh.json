@@ -258,7 +258,13 @@
     "background": "背景色",
     "preview": "预览",
     "copy_text": "复制文本",
-    "download_png": "下载 PNG"
+    "download_png": "下载 PNG",
+    "limit_exceeded": "超出限制",
+    "content_too_long": "内容过长",
+    "current_length": "当前",
+    "max_length": "最大",
+    "characters": "字符",
+    "reduce_content": "请减少内容长度以生成二维码"
   },
   "color-tool": {
     "generated_palette": "生成的色板",

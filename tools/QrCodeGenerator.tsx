@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 export const QrCodeGenerator: React.FC = () => {
   const { t } = useTranslation();
+  const maxLength = 2000; // Maximum characters for QR code
   const [text, setText] = useState('https://example.com');
   const [size, setSize] = useState(256);
   const [fgColor, setFgColor] = useState('#000000');
@@ -41,6 +42,15 @@ export const QrCodeGenerator: React.FC = () => {
     img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
   };
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
+    // Allow input but warn if over limit
+    setText(newText);
+  };
+
+  const isOverLimit = text.length > maxLength;
+  const isNearLimit = text.length > maxLength * 0.9;
+
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-180px)]">
       {/* Configuration Panel */}
@@ -55,11 +65,27 @@ export const QrCodeGenerator: React.FC = () => {
              <label className="block text-sm font-medium text-slate-700 mb-2">{t('qr-code.content')}</label>
              <textarea 
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={handleTextChange}
                 placeholder={t('qr-code.placeholder')}
-                className="w-full h-32 p-3 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none resize-none"
+                className={`w-full h-32 p-3 rounded-lg border text-sm focus:ring-2 focus:ring-brand-500/20 outline-none resize-none ${
+                  isOverLimit 
+                    ? 'border-red-300 focus:border-red-500' 
+                    : isNearLimit 
+                    ? 'border-amber-300 focus:border-amber-500'
+                    : 'border-slate-200 focus:border-brand-500'
+                }`}
              />
-             <div className="flex justify-end mt-2">
+             <div className="flex justify-between items-center mt-2">
+                <div className={`text-xs ${
+                  isOverLimit 
+                    ? 'text-red-600 font-medium' 
+                    : isNearLimit 
+                    ? 'text-amber-600'
+                    : 'text-slate-400'
+                }`}>
+                  {text.length} / {maxLength} {t('qr-code.characters')}
+                  {isOverLimit && ` - ⚠️ ${t('qr-code.limit_exceeded')}`}
+                </div>
                 <button 
                     onClick={() => setText('')}
                     className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1"
@@ -139,19 +165,36 @@ export const QrCodeGenerator: React.FC = () => {
          </div>
 
          <div className="flex-1 flex items-center justify-center p-8 bg-slate-50 overflow-auto">
-            <div 
-                ref={qrRef}
-                className="bg-white p-4 shadow-xl rounded-xl border border-slate-100"
-                style={{ backgroundColor: bgColor }}
-            >
-                <QRCode 
-                    value={text || ' '}
-                    size={size}
-                    fgColor={fgColor}
-                    bgColor={bgColor}
-                    level="M"
-                />
-            </div>
+            {isOverLimit ? (
+              <div className="text-center p-8 bg-white rounded-xl border-2 border-dashed border-amber-300">
+                <div className="text-4xl mb-4">⚠️</div>
+                <div className="text-lg font-semibold text-slate-900 mb-2">{t('qr-code.content_too_long')}</div>
+                <div className="text-sm text-slate-600 mb-1">
+                  {t('qr-code.current_length')}: {text.length} {t('qr-code.characters')}
+                </div>
+                <div className="text-sm text-slate-600">
+                  {t('qr-code.max_length')}: {maxLength} {t('qr-code.characters')}
+                </div>
+                <div className="text-xs text-amber-600 mt-3">
+                  {t('qr-code.reduce_content')}
+                </div>
+              </div>
+            ) : (
+              <div 
+                  ref={qrRef}
+                  className="bg-white p-4 shadow-xl rounded-xl border border-slate-100"
+                  style={{ backgroundColor: bgColor }}
+              >
+                  <QRCode 
+                      key={`qr-${Math.floor(text.length / 100)}`}
+                      value={text || ' '}
+                      size={size}
+                      fgColor={fgColor}
+                      bgColor={bgColor}
+                      level="M"
+                  />
+              </div>
+            )}
          </div>
       </div>
     </div>

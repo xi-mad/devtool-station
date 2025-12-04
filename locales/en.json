@@ -258,7 +258,13 @@
     "background": "Background",
     "preview": "Preview",
     "copy_text": "Copy Text",
-    "download_png": "Download PNG"
+    "download_png": "Download PNG",
+    "limit_exceeded": "Limit Exceeded",
+    "content_too_long": "Content Too Long",
+    "current_length": "Current",
+    "max_length": "Maximum",
+    "characters": "characters",
+    "reduce_content": "Please reduce content length to generate QR code"
   },
   "color-tool": {
     "generated_palette": "Generated Palette",

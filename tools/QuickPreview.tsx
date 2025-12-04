@@ -283,23 +283,28 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         )
     });
 
-    // 10. QR Code (Always show for non-empty string, low priority)
-    newResults.push({
-        id: 'qrcode',
-        type: 'qrcode',
-        label: t('quick-preview.labels.qrcode'),
-        icon: QrCode,
-        priority: 5,
-        content: (
-            <div className="flex justify-center p-4 bg-white">
-                <QRCode 
-                    value={val}
-                    size={128}
-                    level="M"
-                />
-            </div>
-        )
-    });
+    const maxQRCodeLength = 2000;
+    // 10. QR Code (Only show if input is within size limits)
+    if (val.length <= maxQRCodeLength) {
+        newResults.push({
+            id: 'qrcode',
+            type: 'qrcode',
+            label: t('quick-preview.labels.qrcode'),
+            icon: QrCode,
+            priority: 5,
+            content: (
+                <div className="flex justify-center p-4 bg-white">
+                    {/* Key forces remount when length changes significantly */}
+                    <QRCode 
+                        key={`qr-${Math.floor(val.length / 100)}`}
+                        value={val.length <= maxQRCodeLength ? val : val.substring(0, maxQRCodeLength)}
+                        size={128}
+                        level="M"
+                    />
+                </div>
+            )
+        });
+    }
 
     // 11. Hash (MD5, SHA256) - Always show
     newResults.push({
