@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useMemo } from 'react';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-sql';
-import 'prismjs/themes/prism.css';
+import React, { useRef } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-// Ensure Prism is available globally for components that might rely on it
-if (typeof window !== 'undefined') {
-  (window as any).Prism = Prism;
+export interface CodeEditorRef {
+  scrollTo: (top: number, left: number) => void;
+  setSelection: (start: number, end: number) => void;
 }
 
 interface CodeEditorProps {
@@ -19,79 +16,91 @@ interface CodeEditorProps {
   readOnly?: boolean;
 }
 
-export const CodeEditor: React.FC<CodeEditorProps> = ({ 
+export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({ 
   value, 
   onChange, 
   language, 
   placeholder, 
   className = '',
   readOnly = false
-}) => {
+}, ref) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const preRef = useRef<HTMLPreElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const highlighted = useMemo(() => {
-    const grammar = Prism.languages[language];
-    if (!grammar) {
-      // Simple escape for fallback
-      return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  React.useImperativeHandle(ref, () => ({
+    scrollTo: (top, left) => {
+      if (containerRef.current) {
+        containerRef.current.scrollTop = top;
+        containerRef.current.scrollLeft = left;
+      }
+    },
+    setSelection: (start, end) => {
+      if (textareaRef.current) {
+        textareaRef.current.setSelectionRange(start, end);
+        textareaRef.current.focus();
+      }
     }
-    return Prism.highlight(value, grammar, language);
-  }, [value, language]);
+  }));
 
-  const handleScroll = () => {
-    if (textareaRef.current && preRef.current) {
-      preRef.current.scrollTop = textareaRef.current.scrollTop;
-      preRef.current.scrollLeft = textareaRef.current.scrollLeft;
-    }
-  };
+  // Ensure the background grows to accommodate the trailing newline cursor position
+  // by appending a space if the value ends with a newline.
+  const displayValue = value.endsWith('\n') ? value + ' ' : value;
 
   return (
     <div 
-      className={`relative font-mono text-sm focus-within:ring-2 focus-within:ring-brand-500/50 focus-within:border-brand-500 transition-all ${className}`}
+      ref={containerRef}
+      className={`relative font-mono text-sm border-brand-500 transition-all overflow-auto ${className}`}
+      onClick={() => textareaRef.current?.focus()}
     >
-      {/* Highlighted Code (Background) */}
-      <pre
-        ref={preRef}
-        aria-hidden="true"
-        className={`language-${language} absolute inset-0 m-0 p-4 pointer-events-none overflow-hidden whitespace-pre-wrap break-all`}
-        style={{
-             fontFamily: '"JetBrains Mono", monospace',
-             fontSize: '14px',
-             lineHeight: '1.5rem', // leading-6
-             background: 'transparent',
-             border: 'none',
-             borderRadius: 'inherit',
-             margin: 0,
-        }}
-      >
-        <code 
-          className={`language-${language}`}
-          style={{
+      <div className="min-w-full min-h-full relative inline-block align-top">
+        {/* Highlighted Code (Background) */}
+        <SyntaxHighlighter
+          language={language}
+          style={prism}
+          customStyle={{
+            margin: 0,
+            padding: '1rem', // matches p-4
+            background: 'transparent',
             fontFamily: '"JetBrains Mono", monospace',
             fontSize: '14px',
             lineHeight: '1.5rem',
+            pointerEvents: 'none',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-all',
+            overflow: 'visible',
+            border: 'none',
+            minHeight: '100%',
           }}
-          dangerouslySetInnerHTML={{ __html: highlighted + (value.endsWith('\n') ? '<br>' : '') }}
-        />
-      </pre>
+          codeTagProps={{
+            style: {
+              fontFamily: '"JetBrains Mono", monospace',
+              fontSize: '14px',
+              lineHeight: '1.5rem',
+            }
+          }}
+          PreTag="div"
+        >
+          {displayValue}
+        </SyntaxHighlighter>
 
-      {/* Editable Textarea (Foreground) */}
-      <textarea
-        ref={textareaRef}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onScroll={handleScroll}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        className={`absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-slate-800 resize-none focus:outline-none z-10 whitespace-pre-wrap break-all rounded-[inherit] ${readOnly ? 'cursor-default' : ''}`}
-        spellCheck={false}
-        style={{
-            fontFamily: '"JetBrains Mono", monospace',
-            fontSize: '14px',
-            lineHeight: '1.5rem',
-        }}
-      />
+        {/* Editable Textarea (Foreground) */}
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          className={`absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-slate-800 resize-none focus:outline-none overflow-hidden whitespace-pre-wrap break-all ${readOnly ? 'cursor-default' : ''}`}
+          spellCheck={false}
+          style={{
+              fontFamily: '"JetBrains Mono", monospace',
+              fontSize: '14px',
+              lineHeight: '1.5rem',
+          }}
+        />
+      </div>
     </div>
   );
-};
+});
+
+CodeEditor.displayName = 'CodeEditor';

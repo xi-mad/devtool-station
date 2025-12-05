@@ -9,6 +9,7 @@ export const JsonFormatter: React.FC = () => {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { copy, isCopied } = useCopy();
+  const editorRef = React.useRef<import('../components/CodeEditor').CodeEditorRef>(null);
 
   const formatJson = () => {
     if (!input.trim()) return;
@@ -16,6 +17,11 @@ export const JsonFormatter: React.FC = () => {
       const parsed = JSON.parse(input);
       setInput(JSON.stringify(parsed, null, 2));
       setError(null);
+      // Reset cursor and scroll to top
+      requestAnimationFrame(() => {
+        editorRef.current?.setSelection(0, 0);
+        editorRef.current?.scrollTo(0, 0);
+      });
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -31,6 +37,10 @@ export const JsonFormatter: React.FC = () => {
       const parsed = JSON.parse(input);
       setInput(JSON.stringify(parsed));
       setError(null);
+      requestAnimationFrame(() => {
+        editorRef.current?.setSelection(0, 0);
+        editorRef.current?.scrollTo(0, 0);
+      });
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -75,6 +85,10 @@ export const JsonFormatter: React.FC = () => {
       const unescaped = JSON.parse(`"${input}"`);
       setInput(unescaped);
       setError(null);
+      requestAnimationFrame(() => {
+        editorRef.current?.setSelection(0, 0);
+        editorRef.current?.scrollTo(0, 0);
+      });
     } catch (e) {
       // If that fails, try manual replacement of common escape sequences
       try {
@@ -86,6 +100,10 @@ export const JsonFormatter: React.FC = () => {
           .replace(/\\\\/g, '\\');
         setInput(result);
         setError(null);
+        requestAnimationFrame(() => {
+            editorRef.current?.setSelection(0, 0);
+            editorRef.current?.scrollTo(0, 0);
+        });
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -152,6 +170,7 @@ export const JsonFormatter: React.FC = () => {
       
       <div className="relative flex-1">
         <CodeEditor
+          ref={editorRef}
           value={input}
           onChange={setInput}
           language="json"
@@ -159,13 +178,13 @@ export const JsonFormatter: React.FC = () => {
           className="w-full h-full rounded-xl border border-slate-200 shadow-sm bg-white"
         />
         {error && (
-          <div className="absolute bottom-4 left-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-2 text-sm shadow-sm animate-in fade-in slide-in-from-bottom-2">
+          <div className="absolute bottom-4 left-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-2 text-sm shadow-sm animate-in fade-in slide-in-from-bottom-2 pointer-events-none">
             <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
             <span className="font-mono">{error}</span>
           </div>
         )}
         {!error && input && (
-          <div className="absolute bottom-4 right-4 bg-green-50 border border-green-200 text-green-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs shadow-sm opacity-90">
+          <div className="absolute bottom-4 right-4 bg-green-50 border border-green-200 text-green-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs shadow-sm opacity-90 pointer-events-none">
              <CheckCircle size={12} /> {t('json-formatter.valid_json')}
           </div>
         )}
