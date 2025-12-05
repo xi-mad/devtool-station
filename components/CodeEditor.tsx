@@ -42,9 +42,15 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({
     }
   }));
 
+  // Calculate line numbers
+  const lineCount = value.split('\n').length;
+  const lineNumbers = Array.from({ length: lineCount }, (_, i) => i + 1);
+
   // Ensure the background grows to accommodate the trailing newline cursor position
   // by appending a space if the value ends with a newline.
   const displayValue = value.endsWith('\n') ? value + ' ' : value;
+
+  const LINE_NUMBER_WIDTH = '3.5em';
 
   return (
     <div 
@@ -53,35 +59,56 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({
       onClick={() => textareaRef.current?.focus()}
     >
       <div className="min-w-full min-h-full relative inline-block align-top">
-        {/* Highlighted Code (Background) */}
-        <SyntaxHighlighter
-          language={language}
-          style={prism}
-          customStyle={{
-            margin: 0,
-            padding: '1rem', // matches p-4
-            background: 'transparent',
+        {/* Line Numbers */}
+        <div 
+          className="absolute left-0 top-0 p-4 pointer-events-none select-none"
+          style={{
+            width: LINE_NUMBER_WIDTH,
             fontFamily: '"JetBrains Mono", monospace',
             fontSize: '14px',
             lineHeight: '1.5rem',
-            pointerEvents: 'none',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-all',
-            overflow: 'visible',
-            border: 'none',
-            minHeight: '100%',
+            color: '#94a3b8',
+            textAlign: 'right',
+            paddingRight: '1em',
           }}
-          codeTagProps={{
-            style: {
+        >
+          {lineNumbers.map(num => (
+            <div key={num}>{num}</div>
+          ))}
+        </div>
+
+        {/* Highlighted Code (Background) */}
+        <div style={{ paddingLeft: LINE_NUMBER_WIDTH }}>
+          <SyntaxHighlighter
+            language={language}
+            style={prism}
+            customStyle={{
+              margin: 0,
+              padding: '1rem',
+              background: 'transparent',
               fontFamily: '"JetBrains Mono", monospace',
               fontSize: '14px',
               lineHeight: '1.5rem',
-            }
-          }}
-          PreTag="div"
-        >
-          {displayValue}
-        </SyntaxHighlighter>
+              pointerEvents: 'none',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              overflow: 'visible',
+              border: 'none',
+              minHeight: '100%',
+            }}
+            codeTagProps={{
+              style: {
+                fontFamily: '"JetBrains Mono", monospace',
+                fontSize: '14px',
+                lineHeight: '1.5rem',
+              }
+            }}
+            PreTag="div"
+            showLineNumbers={false}
+          >
+            {displayValue}
+          </SyntaxHighlighter>
+        </div>
 
         {/* Editable Textarea (Foreground) */}
         <textarea
@@ -96,6 +123,7 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({
               fontFamily: '"JetBrains Mono", monospace',
               fontSize: '14px',
               lineHeight: '1.5rem',
+              paddingLeft: `calc(${LINE_NUMBER_WIDTH} + 1rem)`,
           }}
         />
       </div>
