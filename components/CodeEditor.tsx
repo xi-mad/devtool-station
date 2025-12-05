@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Editor from '@monaco-editor/react';
+import type { editor } from 'monaco-editor';
 
 export interface CodeEditorRef {
   scrollTo: (top: number, left: number) => void;
@@ -24,109 +24,97 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({
   className = '',
   readOnly = false
 }, ref) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   React.useImperativeHandle(ref, () => ({
     scrollTo: (top, left) => {
-      if (containerRef.current) {
-        containerRef.current.scrollTop = top;
-        containerRef.current.scrollLeft = left;
+      if (editorRef.current) {
+        editorRef.current.setScrollPosition({ scrollTop: top, scrollLeft: left });
       }
     },
     setSelection: (start, end) => {
-      if (textareaRef.current) {
-        textareaRef.current.setSelectionRange(start, end);
-        textareaRef.current.focus();
+      if (editorRef.current) {
+        const model = editorRef.current.getModel();
+        if (model) {
+          const startPos = model.getPositionAt(start);
+          const endPos = model.getPositionAt(end);
+          editorRef.current.setSelection({
+            startLineNumber: startPos.lineNumber,
+            startColumn: startPos.column,
+            endLineNumber: endPos.lineNumber,
+            endColumn: endPos.column,
+          });
+          editorRef.current.focus();
+        }
       }
     }
   }));
 
-  // Calculate line numbers
-  const lineCount = value.split('\n').length;
-  const lineNumbers = Array.from({ length: lineCount }, (_, i) => i + 1);
+  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor) => {
+    editorRef.current = editor;
+  };
 
-  // Ensure the background grows to accommodate the trailing newline cursor position
-  // by appending a space if the value ends with a newline.
-  const displayValue = value.endsWith('\n') ? value + ' ' : value;
+  const handleChange = (value: string | undefined) => {
+    onChange(value || '');
+  };
 
-  const LINE_NUMBER_WIDTH = '3.5em';
+  // Map language names to Monaco language IDs
+  const getMonacoLanguage = (lang: string): string => {
+    const languageMap: Record<string, string> = {
+      'json': 'json',
+      'sql': 'sql',
+      'text': 'plaintext',
+      'javascript': 'javascript',
+      'typescript': 'typescript',
+      'python': 'python',
+      'html': 'html',
+      'css': 'css',
+    };
+    return languageMap[lang.toLowerCase()] || 'plaintext';
+  };
 
   return (
-    <div 
-      ref={containerRef}
-      className={`relative font-mono text-sm border-brand-500 transition-all overflow-auto ${className}`}
-      onClick={() => textareaRef.current?.focus()}
-    >
-      <div className="min-w-full min-h-full relative inline-block align-top">
-        {/* Line Numbers */}
-        <div 
-          className="absolute left-0 top-0 p-4 pointer-events-none select-none"
-          style={{
-            width: LINE_NUMBER_WIDTH,
-            fontFamily: '"JetBrains Mono", monospace',
-            fontSize: '14px',
-            lineHeight: '1.5rem',
-            color: '#94a3b8',
-            textAlign: 'right',
-            paddingRight: '1em',
-          }}
-        >
-          {lineNumbers.map(num => (
-            <div key={num}>{num}</div>
-          ))}
-        </div>
-
-        {/* Highlighted Code (Background) */}
-        <div style={{ paddingLeft: LINE_NUMBER_WIDTH }}>
-          <SyntaxHighlighter
-            language={language}
-            style={prism}
-            customStyle={{
-              margin: 0,
-              padding: '1rem',
-              background: 'transparent',
-              fontFamily: '"JetBrains Mono", monospace',
-              fontSize: '14px',
-              lineHeight: '1.5rem',
-              pointerEvents: 'none',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              overflow: 'visible',
-              border: 'none',
-              minHeight: '100%',
-            }}
-            codeTagProps={{
-              style: {
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '14px',
-                lineHeight: '1.5rem',
-              }
-            }}
-            PreTag="div"
-            showLineNumbers={false}
-          >
-            {displayValue}
-          </SyntaxHighlighter>
-        </div>
-
-        {/* Editable Textarea (Foreground) */}
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          className={`absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-slate-800 resize-none focus:outline-none overflow-hidden whitespace-pre-wrap break-all ${readOnly ? 'cursor-default' : ''}`}
-          spellCheck={false}
-          style={{
-              fontFamily: '"JetBrains Mono", monospace',
-              fontSize: '14px',
-              lineHeight: '1.5rem',
-              paddingLeft: `calc(${LINE_NUMBER_WIDTH} + 1rem)`,
-          }}
-        />
-      </div>
+    <div className={className}>
+      <Editor
+        height="100%"
+        language={getMonacoLanguage(language)}
+        value={value}
+        onChange={handleChange}
+        onMount={handleEditorDidMount}
+        theme="vs"
+        options={{
+          readOnly,
+          minimap: { enabled: false },
+          fontSize: 14,
+          fontFamily: '"JetBrains Mono", monospace',
+          lineHeight: 24,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          wordWrap: 'on',
+          wrappingStrategy: 'advanced',
+          lineNumbers: 'on',
+          folding: true,
+          foldingStrategy: 'indentation',
+          renderLineHighlight: 'line',
+          cursorBlinking: 'blink',
+          cursorSmoothCaretAnimation: 'on',
+          smoothScrolling: true,
+          scrollbar: {
+            vertical: 'visible',
+            horizontal: 'visible',
+            useShadows: false,
+            verticalScrollbarSize: 10,
+            horizontalScrollbarSize: 10,
+          },
+          overviewRulerLanes: 0,
+          hideCursorInOverviewRuler: true,
+          overviewRulerBorder: false,
+          renderWhitespace: 'selection',
+          tabSize: 2,
+          insertSpaces: true,
+        }}
+        loading={<div className="flex items-center justify-center h-full text-slate-400">Loading editor...</div>}
+      />
     </div>
   );
 });
