@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Type, Hash, Copy, Check, Trash2 } from 'lucide-react';
 import { useCopy } from '../hooks/useCopy';
 import { useTranslation } from 'react-i18next';
+import { CodeEditor } from '../components/CodeEditor';
 
 export const TextInspector: React.FC = () => {
   const { t } = useTranslation();
@@ -106,14 +107,14 @@ export const TextInspector: React.FC = () => {
       <div className="flex-1 flex flex-col md:flex-row gap-6 min-h-0">
         {/* Editor */}
         <div className="flex-1 relative">
-           <textarea
+           <CodeEditor
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={setText}
+            language="text"
             placeholder={t('text-inspector.placeholder')}
-            className="w-full h-full p-6 rounded-xl border border-slate-200 font-mono text-sm leading-6 resize-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none shadow-sm transition-all"
-            spellCheck={false}
+            className="w-full h-full rounded-xl border border-slate-200 shadow-sm bg-white"
           />
-          <div className="absolute bottom-4 right-4 text-xs text-slate-400 pointer-events-none">
+          <div className="absolute bottom-4 right-4 text-xs text-slate-400 pointer-events-none bg-white/80 backdrop-blur px-2 py-1 rounded">
             {text.length > 0 ? t('text-inspector.typing') : t('text-inspector.empty')}
           </div>
         </div>

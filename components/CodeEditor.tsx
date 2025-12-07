@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useMemo } from 'react';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-sql';
-import 'prismjs/themes/prism.css';
+import React, { useRef } from 'react';
+import Editor from '@monaco-editor/react';
+import type { editor } from 'monaco-editor';
 
-// Ensure Prism is available globally for components that might rely on it
-if (typeof window !== 'undefined') {
-  (window as any).Prism = Prism;
+export interface CodeEditorRef {
+  scrollTo: (top: number, left: number) => void;
+  setSelection: (start: number, end: number) => void;
 }
 
 interface CodeEditorProps {
@@ -19,79 +16,107 @@ interface CodeEditorProps {
   readOnly?: boolean;
 }
 
-export const CodeEditor: React.FC<CodeEditorProps> = ({ 
+export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({ 
   value, 
   onChange, 
   language, 
   placeholder, 
   className = '',
   readOnly = false
-}) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const preRef = useRef<HTMLPreElement>(null);
+}, ref) => {
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
-  const highlighted = useMemo(() => {
-    const grammar = Prism.languages[language];
-    if (!grammar) {
-      // Simple escape for fallback
-      return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  React.useImperativeHandle(ref, () => ({
+    scrollTo: (top, left) => {
+      if (editorRef.current) {
+        editorRef.current.setScrollPosition({ scrollTop: top, scrollLeft: left });
+      }
+    },
+    setSelection: (start, end) => {
+      if (editorRef.current) {
+        const model = editorRef.current.getModel();
+        if (model) {
+          const startPos = model.getPositionAt(start);
+          const endPos = model.getPositionAt(end);
+          editorRef.current.setSelection({
+            startLineNumber: startPos.lineNumber,
+            startColumn: startPos.column,
+            endLineNumber: endPos.lineNumber,
+            endColumn: endPos.column,
+          });
+          editorRef.current.focus();
+        }
+      }
     }
-    return Prism.highlight(value, grammar, language);
-  }, [value, language]);
+  }));
 
-  const handleScroll = () => {
-    if (textareaRef.current && preRef.current) {
-      preRef.current.scrollTop = textareaRef.current.scrollTop;
-      preRef.current.scrollLeft = textareaRef.current.scrollLeft;
-    }
+  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor) => {
+    editorRef.current = editor;
+  };
+
+  const handleChange = (value: string | undefined) => {
+    onChange(value || '');
+  };
+
+  // Map language names to Monaco language IDs
+  const getMonacoLanguage = (lang: string): string => {
+    const languageMap: Record<string, string> = {
+      'json': 'json',
+      'sql': 'sql',
+      'text': 'plaintext',
+      'javascript': 'javascript',
+      'typescript': 'typescript',
+      'python': 'python',
+      'html': 'html',
+      'css': 'css',
+    };
+    return languageMap[lang.toLowerCase()] || 'plaintext';
   };
 
   return (
-    <div 
-      className={`relative font-mono text-sm focus-within:ring-2 focus-within:ring-brand-500/50 focus-within:border-brand-500 transition-all ${className}`}
-    >
-      {/* Highlighted Code (Background) */}
-      <pre
-        ref={preRef}
-        aria-hidden="true"
-        className={`language-${language} absolute inset-0 m-0 p-4 pointer-events-none overflow-hidden whitespace-pre-wrap break-all`}
-        style={{
-             fontFamily: '"JetBrains Mono", monospace',
-             fontSize: '14px',
-             lineHeight: '1.5rem', // leading-6
-             background: 'transparent',
-             border: 'none',
-             borderRadius: 'inherit',
-             margin: 0,
-        }}
-      >
-        <code 
-          className={`language-${language}`}
-          style={{
-            fontFamily: '"JetBrains Mono", monospace',
-            fontSize: '14px',
-            lineHeight: '1.5rem',
-          }}
-          dangerouslySetInnerHTML={{ __html: highlighted + (value.endsWith('\n') ? '<br>' : '') }}
-        />
-      </pre>
-
-      {/* Editable Textarea (Foreground) */}
-      <textarea
-        ref={textareaRef}
+    <div className={className}>
+      <Editor
+        height="100%"
+        language={getMonacoLanguage(language)}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onScroll={handleScroll}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        className={`absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-slate-800 resize-none focus:outline-none z-10 whitespace-pre-wrap break-all rounded-[inherit] ${readOnly ? 'cursor-default' : ''}`}
-        spellCheck={false}
-        style={{
-            fontFamily: '"JetBrains Mono", monospace',
-            fontSize: '14px',
-            lineHeight: '1.5rem',
+        onChange={handleChange}
+        onMount={handleEditorDidMount}
+        theme="vs"
+        options={{
+          readOnly,
+          minimap: { enabled: false },
+          fontSize: 14,
+          fontFamily: '"JetBrains Mono", monospace',
+          lineHeight: 24,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          wordWrap: 'on',
+          wrappingStrategy: 'advanced',
+          lineNumbers: 'on',
+          folding: true,
+          foldingStrategy: 'indentation',
+          renderLineHighlight: 'line',
+          cursorBlinking: 'blink',
+          cursorSmoothCaretAnimation: 'on',
+          smoothScrolling: true,
+          scrollbar: {
+            vertical: 'visible',
+            horizontal: 'visible',
+            useShadows: false,
+            verticalScrollbarSize: 10,
+            horizontalScrollbarSize: 10,
+          },
+          overviewRulerLanes: 0,
+          hideCursorInOverviewRuler: true,
+          overviewRulerBorder: false,
+          renderWhitespace: 'selection',
+          tabSize: 2,
+          insertSpaces: true,
         }}
+        loading={<div className="flex items-center justify-center h-full text-slate-400">Loading editor...</div>}
       />
     </div>
   );
-};
+});
+
+CodeEditor.displayName = 'CodeEditor';
