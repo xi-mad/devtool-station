@@ -82,7 +82,12 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
 
                 {/* Category Dropdowns */}
                 {categoryConfig.map(({ name, translationKey, icon: Icon }) => (
-                    <div key={name} className="relative">
+                    <div 
+                        key={name} 
+                        className="relative"
+                        onMouseEnter={() => setOpenMenu(name)}
+                        onMouseLeave={() => setOpenMenu(null)}
+                    >
                         <button
                             onClick={() => setOpenMenu(openMenu === name ? null : name)}
                             className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all border border-transparent
@@ -103,19 +108,21 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
                         </button>
 
                         {openMenu === name && (
-                            <div className="absolute top-full left-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-slate-200 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
-                                {TOOLS.filter(t => t.category === name).map(tool => (
-                                    <button
-                                        key={tool.id}
-                                        onClick={() => handleToolSelect(tool.id)}
-                                        className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-slate-50 transition-colors
-                                            ${activeTool === tool.id ? 'text-brand-600 bg-brand-50/50 border-l-2 border-brand-500' : 'text-slate-700 border-l-2 border-transparent'}
-                                        `}
-                                    >
-                                        <tool.icon size={16} className={activeTool === tool.id ? 'text-brand-600' : 'text-slate-400'} />
-                                        <span>{t(`tools.${tool.id}.name`)}</span>
-                                    </button>
-                                ))}
+                            <div className="absolute top-full left-0 pt-1">
+                                <div className="w-60 bg-white rounded-xl shadow-xl border border-slate-200 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
+                                    {TOOLS.filter(t => t.category === name).map(tool => (
+                                        <button
+                                            key={tool.id}
+                                            onClick={() => handleToolSelect(tool.id)}
+                                            className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-slate-50 transition-colors
+                                                ${activeTool === tool.id ? 'text-brand-600 bg-brand-50/50 border-l-2 border-brand-500' : 'text-slate-700 border-l-2 border-transparent'}
+                                            `}
+                                        >
+                                            <tool.icon size={16} className={activeTool === tool.id ? 'text-brand-600' : 'text-slate-400'} />
+                                            <span>{t(`tools.${tool.id}.name`)}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
