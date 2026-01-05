@@ -41,25 +41,25 @@ export const TimestampTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-6 max-w-3xl mx-auto transition-colors">
       {/* Current Time Card (Seconds) */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-brand-50 text-brand-600 rounded-full">
+          <div className="p-3 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-full">
             <Clock size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900">{t('timestamp.current_unix_timestamp')}</h3>
-            <p className="text-slate-500 text-sm">{t('timestamp.seconds_since_epoch')}</p>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t('timestamp.current_unix_timestamp')}</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">{t('timestamp.seconds_since_epoch')}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <code className="text-2xl font-mono font-bold text-slate-800 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+          <code className="text-2xl font-mono font-bold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
             {now}
           </code>
           <button 
             onClick={() => copy(now.toString())}
-            className="p-3 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
             title={t('timestamp.copy')}
           >
             {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
@@ -68,23 +68,23 @@ export const TimestampTool: React.FC = () => {
       </div>
 
       {/* Current Time Card (Milliseconds) */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-brand-50 text-brand-600 rounded-full">
+          <div className="p-3 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-full">
             <Clock size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900">{t('timestamp.current_unix_timestamp_ms')}</h3>
-            <p className="text-slate-500 text-sm">{t('timestamp.ms_since_epoch')}</p>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t('timestamp.current_unix_timestamp_ms')}</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">{t('timestamp.ms_since_epoch')}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <code className="text-2xl font-mono font-bold text-slate-800 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+          <code className="text-2xl font-mono font-bold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
             {nowMs}
           </code>
           <button 
             onClick={() => copyMs(nowMs.toString())}
-            className="p-3 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
             title={t('timestamp.copy')}
           >
             {isMsCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
@@ -93,22 +93,22 @@ export const TimestampTool: React.FC = () => {
       </div>
 
       {/* Converter */}
-      <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-200 space-y-8">
-        <h3 className="font-semibold text-slate-900 border-b border-slate-100 pb-4">{t('timestamp.converter')}</h3>
+      <div className="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-800 space-y-8 transition-colors">
+        <h3 className="font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-4">{t('timestamp.converter')}</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">{t('timestamp.unix_timestamp_label')}</label>
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors">{t('timestamp.unix_timestamp_label')}</label>
             <div className="flex gap-2">
               <input 
                 type="text" 
                 value={inputTs}
                 onChange={(e) => handleTsChange(e.target.value)}
-                className="flex-1 p-3 rounded-lg border border-slate-300 font-mono text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
+                className="flex-1 p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-mono text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
               />
               <button 
                 onClick={() => handleTsChange(now.toString())}
-                className="px-3 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-200"
+                className="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               >
                 {t('timestamp.now')}
               </button>
@@ -116,29 +116,29 @@ export const TimestampTool: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">{t('timestamp.iso_date_label')}</label>
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors">{t('timestamp.iso_date_label')}</label>
             <input 
               type="text"
               value={inputDate}
               onChange={(e) => handleDateChange(e.target.value)}
-               className="w-full p-3 rounded-lg border border-slate-300 font-mono text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
+               className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-mono text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
             />
-            <p className="text-xs text-slate-500">{t('timestamp.format_hint')}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 transition-colors">{t('timestamp.format_hint')}</p>
           </div>
         </div>
 
-        <div className="bg-slate-50 rounded-lg p-4 space-y-2">
+        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-2">
            <div className="flex justify-between text-sm">
-             <span className="text-slate-500">{t('timestamp.local_string')}</span>
-             <span className="font-mono text-slate-800">{new Date(parseInt(inputTs) * 1000).toString()}</span>
+             <span className="text-slate-500 dark:text-slate-400">{t('timestamp.local_string')}</span>
+             <span className="font-mono text-slate-800 dark:text-slate-200">{new Date(parseInt(inputTs) * 1000).toString()}</span>
            </div>
            <div className="flex justify-between text-sm">
-             <span className="text-slate-500">{t('timestamp.utc_string')}</span>
-             <span className="font-mono text-slate-800">{new Date(parseInt(inputTs) * 1000).toUTCString()}</span>
+             <span className="text-slate-500 dark:text-slate-400">{t('timestamp.utc_string')}</span>
+             <span className="font-mono text-slate-800 dark:text-slate-200">{new Date(parseInt(inputTs) * 1000).toUTCString()}</span>
            </div>
            <div className="flex justify-between text-sm">
-             <span className="text-slate-500">{t('timestamp.relative')}</span>
-             <span className="font-mono text-slate-800">
+             <span className="text-slate-500 dark:text-slate-400">{t('timestamp.relative')}</span>
+             <span className="font-mono text-slate-800 dark:text-slate-200">
                {(() => {
                  const diff = Date.now() - parseInt(inputTs) * 1000;
                  const seconds = Math.floor(Math.abs(diff) / 1000);

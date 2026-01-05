@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
+import { useTheme } from '../hooks/useTheme';
 
 export interface CodeEditorRef {
   scrollTo: (top: number, left: number) => void;
@@ -24,6 +25,7 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({
   className = '',
   readOnly = false
 }, ref) => {
+  const { theme } = useTheme();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   React.useImperativeHandle(ref, () => ({
@@ -81,7 +83,7 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(({
         value={value}
         onChange={handleChange}
         onMount={handleEditorDidMount}
-        theme="vs"
+        theme={theme === 'dark' ? 'vs-dark' : 'vs'}
         options={{
           readOnly,
           minimap: { enabled: false },

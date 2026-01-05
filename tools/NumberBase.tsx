@@ -108,10 +108,10 @@ const BaseInput: React.FC<{
   onCopy: () => void;
   isCopied: boolean;
 }> = ({ label, value, onChange, placeholder, badge, onCopy, isCopied }) => (
-  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2">
+  <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-2 transition-colors">
     <div className="flex justify-between items-center">
-        <label className="text-sm font-semibold text-slate-700">{label}</label>
-        <div className="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">
+        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">{label}</label>
+        <div className="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded uppercase tracking-wider transition-colors">
             {badge}
         </div>
     </div>
@@ -121,11 +121,11 @@ const BaseInput: React.FC<{
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-lg font-mono text-lg text-slate-900 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all"
+        className="flex-1 p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg font-mono text-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all"
       />
       <button 
         onClick={onCopy}
-        className="p-3 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg border border-transparent hover:border-brand-100 transition-colors"
+        className="p-3 text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-lg border border-transparent hover:border-brand-100 dark:hover:border-slate-700 transition-colors"
       >
         {isCopied ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
       </button>

@@ -96,15 +96,15 @@ export const FullscreenColor: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 h-[calc(100vh-180px)]">
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+    <div className="flex flex-col gap-6 h-[calc(100vh-180px)] transition-colors">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-brand-50 text-brand-600 rounded-lg">
+          <div className="p-2 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-lg">
             <Maximize2 size={20} />
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900">{t('fullscreen-color.title')}</h3>
-            <p className="text-xs text-slate-500">{t('fullscreen-color.subtitle')}</p>
+            <h3 className="font-semibold text-slate-900 dark:text-white">{t('fullscreen-color.title')}</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{t('fullscreen-color.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -118,13 +118,13 @@ export const FullscreenColor: React.FC = () => {
           />
 
           {/* Color Picker */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 space-y-6">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 space-y-6 transition-colors">
             <div className="flex items-center gap-6">
               <input
                 type="color"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
-                className="w-24 h-24 rounded-2xl cursor-pointer border-4 border-slate-200 shadow-sm"
+                className="w-24 h-24 rounded-2xl cursor-pointer border-4 border-slate-200 dark:border-slate-700 shadow-sm transition-colors"
               />
               <div className="flex-1 space-y-3">
                 <div className="flex items-center gap-3">
@@ -132,11 +132,11 @@ export const FullscreenColor: React.FC = () => {
                     type="text"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
-                    className="flex-1 px-4 py-3 border border-slate-300 rounded-lg font-mono text-lg uppercase focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
+                    className="flex-1 px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg font-mono text-lg uppercase focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors"
                   />
                   <button
                     onClick={() => copy(color)}
-                    className="p-3 text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors border border-slate-200"
+                    className="p-3 text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"
                   >
                     {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
                   </button>
@@ -153,7 +153,7 @@ export const FullscreenColor: React.FC = () => {
 
             {/* Quick Colors */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-3">{t('fullscreen-color.quick_colors')}</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">{t('fullscreen-color.quick_colors')}</label>
               <div className="grid grid-cols-8 gap-2">
                 {[
                   '#ef4444', '#f97316', '#f59e0b', '#eab308', 
@@ -165,7 +165,7 @@ export const FullscreenColor: React.FC = () => {
                   <button
                     key={c}
                     onClick={() => setColor(c)}
-                    className="w-full aspect-square rounded-lg border-2 border-slate-200 hover:border-slate-400 transition-all hover:scale-110 shadow-sm"
+                    className="w-full aspect-square rounded-lg border-2 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 transition-all hover:scale-110 shadow-sm"
                     style={{ backgroundColor: c }}
                     title={c}
                   />

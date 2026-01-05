@@ -108,17 +108,17 @@ export const UuidGenerator: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-180px)]">
+    <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-180px)] transition-colors">
       {/* Configuration Panel */}
-      <div className="w-full md:w-72 flex flex-col bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="flex items-center gap-2 p-6 border-b border-slate-100 bg-slate-50/50">
-           <Settings className="text-slate-400" size={20} />
-           <h3 className="font-semibold text-slate-900">{t('uuid-generator.configuration')}</h3>
+      <div className="w-full md:w-72 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
+        <div className="flex items-center gap-2 p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 transition-colors">
+           <Settings className="text-slate-400 dark:text-slate-500" size={20} />
+           <h3 className="font-semibold text-slate-900 dark:text-white transition-colors">{t('uuid-generator.configuration')}</h3>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">{t('uuid-generator.version')}</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 transition-colors">{t('uuid-generator.version')}</label>
             <div className="space-y-2">
                {[
                  { id: 'v1', label: t('uuid-generator.v1_label'), desc: t('uuid-generator.v1_desc') },
@@ -130,30 +130,30 @@ export const UuidGenerator: React.FC = () => {
                    onClick={() => setVersion(opt.id as UuidVersion)}
                    className={`w-full text-left p-3 rounded-lg border text-sm transition-all ${
                      version === opt.id 
-                       ? 'bg-brand-50 border-brand-200 ring-1 ring-brand-500/20' 
-                       : 'bg-white border-slate-200 hover:border-slate-300'
+                       ? 'bg-brand-50 dark:bg-brand-500/10 border-brand-200 dark:border-brand-500/50 ring-1 ring-brand-500/20' 
+                       : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                    }`}
                  >
-                    <div className={`font-medium ${version === opt.id ? 'text-brand-700' : 'text-slate-900'}`}>
+                    <div className={`font-medium ${version === opt.id ? 'text-brand-700 dark:text-brand-400' : 'text-slate-900 dark:text-slate-100'}`}>
                       {opt.label}
                     </div>
-                    <div className="text-xs text-slate-500 mt-0.5">{opt.desc}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{opt.desc}</div>
                  </button>
                ))}
             </div>
           </div>
 
           <div>
-             <label className="block text-sm font-medium text-slate-700 mb-2">{t('uuid-generator.quantity')}: {quantity}</label>
+             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 transition-colors">{t('uuid-generator.quantity')}: {quantity}</label>
              <input 
                 type="range" 
                 min="1" 
                 max="50" 
                 value={quantity} 
                 onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600"
+                className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-600 transition-colors"
              />
-             <div className="flex justify-between text-xs text-slate-400 mt-1">
+             <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500 mt-1 transition-colors">
                <span>1</span>
                <span>50</span>
              </div>
@@ -165,23 +165,23 @@ export const UuidGenerator: React.FC = () => {
                  type="checkbox" 
                  checked={uppercase} 
                  onChange={(e) => setUppercase(e.target.checked)}
-                 className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
+                 className="w-4 h-4 text-brand-600 rounded border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:ring-brand-500 transition-colors"
                />
-               <span className="text-sm text-slate-700">{t('uuid-generator.uppercase')}</span>
+               <span className="text-sm text-slate-700 dark:text-slate-300 transition-colors">{t('uuid-generator.uppercase')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
                <input 
                  type="checkbox" 
                  checked={noHyphens} 
                  onChange={(e) => setNoHyphens(e.target.checked)}
-                 className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
+                 className="w-4 h-4 text-brand-600 rounded border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:ring-brand-500 transition-colors"
                />
-               <span className="text-sm text-slate-700">{t('uuid-generator.remove_hyphens')}</span>
+               <span className="text-sm text-slate-700 dark:text-slate-300 transition-colors">{t('uuid-generator.remove_hyphens')}</span>
             </label>
           </div>
         </div>
 
-        <div className="p-6 border-t border-slate-100 bg-slate-50/50">
+        <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 transition-colors">
            <button 
              onClick={generate}
              className="w-full flex items-center justify-center gap-2 bg-brand-600 text-white py-2.5 rounded-lg hover:bg-brand-700 transition-colors font-medium shadow-sm"
@@ -192,17 +192,17 @@ export const UuidGenerator: React.FC = () => {
       </div>
 
       {/* Results Panel */}
-      <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col min-h-0 overflow-hidden">
-         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <div className="flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col min-h-0 overflow-hidden transition-colors">
+         <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50 transition-colors">
            <div className="flex items-center gap-2">
-             <div className="bg-brand-100 text-brand-700 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide">
+             <div className="bg-brand-100 dark:bg-brand-500/10 text-brand-700 dark:text-brand-400 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide transition-colors">
                UUID {version.toUpperCase()}
              </div>
-             <span className="text-sm text-slate-500">{uuids.length} {t('uuid-generator.generated')}</span>
+             <span className="text-sm text-slate-500 dark:text-slate-400 transition-colors">{uuids.length} {t('uuid-generator.generated')}</span>
            </div>
             <button 
                onClick={() => copy(uuids.join('\n'), 'all')}
-               className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-brand-600 px-3 py-1.5 rounded-lg hover:bg-white border border-transparent hover:border-slate-200 transition-all"
+               className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-1.5 rounded-lg hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all"
             >
               {isCopied('all') ? <Check size={16} /> : <FileText size={16} />}
               {t('uuid-generator.copy_all')}
@@ -213,12 +213,12 @@ export const UuidGenerator: React.FC = () => {
             {uuids.map((uuid, idx) => (
               <div 
                 key={`${idx}-${uuid}`} 
-                className="group flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200"
+                className="group flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
               >
-                <div className="w-8 text-center text-xs text-slate-400 font-mono select-none">
+                <div className="w-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono select-none transition-colors">
                   {(idx + 1).toString().padStart(2, '0')}
                 </div>
-                <code className="flex-1 font-mono text-slate-700 text-sm md:text-base break-all">
+                <code className="flex-1 font-mono text-slate-700 dark:text-slate-300 text-sm md:text-base break-all transition-colors">
                   {uuid}
                 </code>
                 <button
@@ -226,8 +226,8 @@ export const UuidGenerator: React.FC = () => {
                   className={`
                     p-2 rounded-lg transition-all
                     ${isCopied(idx.toString()) 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'text-slate-400 hover:text-brand-600 hover:bg-white shadow-sm opacity-0 group-hover:opacity-100'}
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' 
+                      : 'text-slate-400 dark:text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-white dark:hover:bg-slate-700 shadow-sm opacity-0 group-hover:opacity-100'}
                   `}
                   title="Copy"
                 >

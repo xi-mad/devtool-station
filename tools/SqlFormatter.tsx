@@ -32,13 +32,13 @@ export const SqlFormatter: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-180px)] gap-4">
-      <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+    <div className="flex flex-col h-[calc(100vh-180px)] gap-4 transition-colors">
+      <div className="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 transition-colors">
          <div className="flex items-center gap-2">
-            <div className="p-2 bg-brand-50 text-brand-600 rounded-lg">
+            <div className="p-2 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-lg transition-colors">
                 <Database size={18} />
             </div>
-            <span className="font-semibold text-slate-700">{t('sql-formatter.title')}</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300 transition-colors">{t('sql-formatter.title')}</span>
          </div>
          <div className="flex gap-2">
             <button 
@@ -49,20 +49,20 @@ export const SqlFormatter: React.FC = () => {
             </button>
             <button 
                 onClick={compressSql}
-                className="px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+                className="px-4 py-2 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm"
             >
                 {t('sql-formatter.minify')}
             </button>
             <button 
                 onClick={() => copy(input)}
-                className="p-2 text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors border border-transparent hover:border-brand-100"
+                className="p-2 text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-lg transition-colors border border-transparent hover:border-brand-100 dark:hover:border-slate-800"
                 title={t('sql-formatter.copy')}
             >
                 {isCopied() ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
             </button>
             <button 
                 onClick={() => setInput('')}
-                className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-100 dark:hover:border-slate-800"
                 title={t('sql-formatter.clear')}
             >
                 <Trash2 size={18} />
@@ -76,7 +76,7 @@ export const SqlFormatter: React.FC = () => {
             onChange={setInput}
             language="sql"
             placeholder={t('sql-formatter.placeholder')}
-            className="w-full h-full rounded-xl border border-slate-200 shadow-sm bg-white"
+            className="w-full h-full rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900 transition-colors"
          />
       </div>
     </div>

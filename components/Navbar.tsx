@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ToolId } from '../types';
-import { ChevronDown, Zap, Github, RefreshCw, FileEdit, Sparkles, Globe } from 'lucide-react';
+import { ChevronDown, Zap, Github, RefreshCw, FileEdit, Sparkles, Globe, Sun, Moon } from 'lucide-react';
 import { TOOLS } from './Sidebar';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../hooks/useTheme';
 
 interface NavbarProps {
   activeTool: ToolId;
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
   const { t, i18n } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openLangMenu, setOpenLangMenu] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200">
+    <nav className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center gap-6" ref={navRef}>
@@ -61,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
                 alt="DevTool Station Logo" 
                 className="w-8 h-8 rounded-lg group-hover:scale-110 transition-transform"
               />
-              <span className="font-bold text-xl tracking-tight text-slate-900">{t('app.title')}</span>
+              <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">{t('app.title')}</span>
             </button>
 
             {/* Navigation Items */}
@@ -71,8 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
                     onClick={() => handleToolSelect(ToolId.QUICK_PREVIEW)}
                     className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all border border-transparent
                         ${activeTool === ToolId.QUICK_PREVIEW
-                            ? 'text-brand-600 bg-brand-50/50 border-brand-200' 
-                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-200'
+                            ? 'text-brand-600 bg-brand-50/50 border-brand-200 dark:bg-brand-500/10 dark:border-brand-500/20' 
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
                         }
                     `}
                 >
@@ -92,10 +94,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
                             onClick={() => setOpenMenu(openMenu === name ? null : name)}
                             className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all border border-transparent
                                 ${openMenu === name 
-                                    ? 'bg-slate-100 text-slate-900' 
-                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-200'
+                                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white' 
+                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-700'
                                 }
-                                ${TOOLS.some(t => t.category === name && t.id === activeTool) ? 'text-brand-600 bg-brand-50/50 border-brand-200' : ''}
+                                ${TOOLS.some(t => t.category === name && t.id === activeTool) ? 'text-brand-600 bg-brand-50/50 border-brand-200 dark:bg-brand-500/10 dark:border-brand-500/20' : ''}
                             `}
                         >
                             <Icon size={16} className={
@@ -109,13 +111,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
 
                         {openMenu === name && (
                             <div className="absolute top-full left-0 pt-1">
-                                <div className="w-60 bg-white rounded-xl shadow-xl border border-slate-200 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
+                                <div className="w-60 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-left overflow-hidden">
                                     {TOOLS.filter(t => t.category === name).map(tool => (
                                         <button
                                             key={tool.id}
                                             onClick={() => handleToolSelect(tool.id)}
-                                            className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-slate-50 transition-colors
-                                                ${activeTool === tool.id ? 'text-brand-600 bg-brand-50/50 border-l-2 border-brand-500' : 'text-slate-700 border-l-2 border-transparent'}
+                                            className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
+                                                ${activeTool === tool.id ? 'text-brand-600 bg-brand-50/50 border-l-2 border-brand-500 dark:bg-brand-500/10' : 'text-slate-700 dark:text-slate-300 border-l-2 border-transparent'}
                                             `}
                                         >
                                             <tool.icon size={16} className={activeTool === tool.id ? 'text-brand-600' : 'text-slate-400'} />
@@ -136,34 +138,43 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTool, onSelectTool }) => {
             <div className="relative" ref={langRef}>
               <button
                 onClick={() => setOpenLangMenu(!openLangMenu)}
-                className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 title="Change Language"
               >
                 <Globe size={20} />
               </button>
               
               {openLangMenu && (
-                <div className="absolute top-full right-0 mt-2 w-32 bg-white rounded-xl shadow-xl border border-slate-200 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right overflow-hidden">
+                <div className="absolute top-full right-0 mt-2 w-32 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right overflow-hidden">
                   <button
                     onClick={() => changeLanguage('en')}
-                    className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 transition-colors ${i18n.language === 'en' ? 'text-brand-600 font-medium' : 'text-slate-700'}`}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${i18n.language === 'en' ? 'text-brand-600 font-medium' : 'text-slate-700 dark:text-slate-300'}`}
                   >
                     English
                   </button>
                   <button
                     onClick={() => changeLanguage('zh')}
-                    className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 transition-colors ${i18n.language === 'zh' ? 'text-brand-600 font-medium' : 'text-slate-700'}`}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${i18n.language === 'zh' ? 'text-brand-600 font-medium' : 'text-slate-700 dark:text-slate-300'}`}
                   >
                     中文
                   </button>
                 </div>
               )}
             </div>
+            
+            {/* Theme Toggle */}
+            <button
+                onClick={toggleTheme}
+                className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            >
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
 
             <a 
               href="https://github.com/xi-mad/devtool-station"
               target="_blank"
-              className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
               title="View on GitHub"
             >
               <Github size={20} />

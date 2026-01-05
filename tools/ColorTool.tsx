@@ -90,12 +90,12 @@ export const ColorTool: React.FC = () => {
 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 transition-colors">
       {/* Picker & Converter */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-8 transition-colors">
         <div className="flex flex-col gap-4">
           <div 
-            className="w-full h-32 rounded-xl shadow-inner border border-slate-200 transition-colors duration-200"
+            className="w-full h-32 rounded-xl shadow-inner border border-slate-200 dark:border-slate-800 transition-colors duration-200"
             style={{ backgroundColor: hex }}
           />
           <div className="flex gap-2">
@@ -103,24 +103,24 @@ export const ColorTool: React.FC = () => {
                 type="color" 
                 value={hex}
                 onChange={handleHexChange}
-                className="w-full h-10 cursor-pointer rounded-lg border border-slate-200 p-1"
+                className="w-full h-10 cursor-pointer rounded-lg border border-slate-200 dark:border-slate-700 p-1 bg-white dark:bg-slate-800 transition-colors"
             />
           </div>
         </div>
         
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">HEX</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">HEX</label>
             <div className="flex gap-2">
                 <input 
                 type="text" 
                 value={hex}
                 onChange={handleHexChange}
-                className="w-full p-2 border border-slate-300 rounded-lg font-mono uppercase"
+                className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg font-mono uppercase bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors"
                 />
                 <button 
                     onClick={() => copy(hex, hex)}
-                    className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg border border-slate-200"
+                    className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
                 >
                     {isCopied(hex) ? <Check size={20} className="text-green-600"/> : <Copy size={20} />}
                 </button>
@@ -129,20 +129,20 @@ export const ColorTool: React.FC = () => {
           <div className="grid grid-cols-3 gap-4">
             {(['r', 'g', 'b'] as const).map(c => (
               <div key={c}>
-                <label className="block text-sm font-medium text-slate-700 mb-1 uppercase">{c}</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 uppercase transition-colors">{c}</label>
                 <input 
                   type="number"
                   value={rgb[c]}
                   onChange={(e) => handleRgbChange(c, e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg font-mono"
+                  className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg font-mono bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors"
                 />
               </div>
             ))}
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">CSS</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">CSS</label>
              <div 
-                className="bg-slate-50 p-2 rounded-lg font-mono text-sm text-slate-600 border border-slate-200 select-all cursor-pointer hover:bg-slate-100 transition-colors flex justify-between items-center"
+                className="bg-slate-50 dark:bg-slate-800 p-2 rounded-lg font-mono text-sm text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 select-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex justify-between items-center"
                 onClick={() => copy(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`, `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}
              >
                 {`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`}
@@ -153,9 +153,9 @@ export const ColorTool: React.FC = () => {
       </div>
 
       {/* Generated Palette */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900">{t('color-tool.generated_palette')}</h3>
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="space-y-4 transition-colors">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white transition-colors">{t('color-tool.generated_palette')}</h3>
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
             <div className="grid grid-cols-5 sm:grid-cols-11 gap-2">
                 {Object.entries(generatedPalette).map(([weight, color]) => (
                     <div key={weight} className="flex flex-col gap-1 group cursor-pointer" onClick={() => copy(color, color)}>
@@ -170,8 +170,8 @@ export const ColorTool: React.FC = () => {
                             )}
                         </div>
                         <div className="text-center">
-                            <div className="text-[10px] font-bold text-slate-500">{weight}</div>
-                            <div className="text-[10px] font-mono text-slate-400 uppercase hidden sm:block">{(color as string).replace('#', '')}</div>
+                            <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">{weight}</div>
+                            <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase hidden sm:block">{(color as string).replace('#', '')}</div>
                         </div>
                     </div>
                 ))}
@@ -180,12 +180,12 @@ export const ColorTool: React.FC = () => {
       </div>
 
       {/* Common Palettes */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900">{t('color-tool.common_palettes')}</h3>
+      <div className="space-y-4 transition-colors">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white transition-colors">{t('color-tool.common_palettes')}</h3>
         <div className="grid grid-cols-1 gap-6">
           {Object.entries(TAILWIND_COLORS).map(([name, colors]) => (
-             <div key={name} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <h4 className="text-sm font-medium text-slate-500 mb-3">{name}</h4>
+             <div key={name} className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+                <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-3">{name}</h4>
                 <div className="grid grid-cols-10 gap-1 sm:gap-2">
                   {colors.map((c, i) => (
                     <button

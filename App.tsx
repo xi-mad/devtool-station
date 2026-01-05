@@ -54,7 +54,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 font-sans text-slate-900 flex flex-col">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300">
       <Navbar 
         activeTool={activeToolId} 
         onSelectTool={setActiveToolId} 

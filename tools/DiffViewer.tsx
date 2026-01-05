@@ -48,13 +48,13 @@ export const DiffViewer: React.FC = () => {
   }, [left, right, method, t]);
 
   const renderUnified = () => (
-    <pre className="whitespace-pre-wrap break-all font-mono text-sm leading-6">
+    <pre className="whitespace-pre-wrap break-all font-mono text-sm leading-6 transition-colors">
       {diffResult.map((part, index) => {
         const color = part.added 
-          ? 'bg-green-100 text-green-800' 
+          ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300' 
           : part.removed 
-            ? 'bg-red-100 text-red-800 decoration-red-400 line-through decoration-2 opacity-70' 
-            : 'text-slate-600';
+            ? 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 decoration-red-400 dark:decoration-red-500 line-through decoration-2 opacity-70' 
+            : 'text-slate-600 dark:text-slate-400';
         return (
           <span key={index} className={`${color} px-0.5 rounded-sm`}>
             {part.value}
@@ -67,9 +67,9 @@ export const DiffViewer: React.FC = () => {
   const renderSplit = () => (
     <div className="grid grid-cols-2 gap-4 h-full">
       {/* Original State (Left) */}
-      <div className="overflow-auto border-r border-slate-100 pr-2">
-         <div className="sticky top-0 bg-white/95 backdrop-blur z-10 border-b border-slate-100 pb-2 mb-2">
-            <span className="text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1">
+      <div className="overflow-auto border-r border-slate-100 dark:border-slate-800 pr-2">
+         <div className="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur z-10 border-b border-slate-100 dark:border-slate-800 pb-2 mb-2">
+            <span className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider flex items-center gap-1">
               {t('diff-viewer.original')}
             </span>
          </div>
@@ -88,8 +88,8 @@ export const DiffViewer: React.FC = () => {
 
       {/* Modified State (Right) */}
       <div className="overflow-auto pl-2">
-         <div className="sticky top-0 bg-white/95 backdrop-blur z-10 border-b border-slate-100 pb-2 mb-2">
-            <span className="text-xs font-bold text-green-600 uppercase tracking-wider flex items-center gap-1">
+         <div className="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur z-10 border-b border-slate-100 dark:border-slate-800 pb-2 mb-2">
+            <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider flex items-center gap-1">
               {t('diff-viewer.modified')}
             </span>
          </div>
@@ -109,9 +109,9 @@ export const DiffViewer: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
+    <div className="flex flex-col gap-6 pb-12 transition-colors">
       {/* Header Toolbar */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white p-3 rounded-xl shadow-sm border border-slate-200 gap-3 sticky top-0 z-20">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 gap-3 sticky top-0 z-20 transition-colors">
         <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
           {(['lines', 'words', 'chars', 'json'] as DiffMethod[]).map((m) => (
             <button
@@ -121,7 +121,7 @@ export const DiffViewer: React.FC = () => {
                 px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-colors whitespace-nowrap
                 ${method === m 
                   ? 'bg-brand-600 text-white shadow-sm' 
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}
               `}
             >
               {m} {t('diff-viewer.diff_suffix')}
@@ -131,15 +131,15 @@ export const DiffViewer: React.FC = () => {
 
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
              {error && (
-                <div className="text-xs text-amber-600 flex items-center gap-1 font-medium bg-amber-50 px-2 py-1 rounded">
+                <div className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1 font-medium bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded transition-colors">
                     <AlertCircle size={14} /> <span className="truncate max-w-[200px]">{error}</span>
                 </div>
             )}
             
-            <div className="flex bg-slate-100 p-1 rounded-lg">
+            <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg transition-colors">
                 <button
                     onClick={() => setViewMode('unified')}
-                    className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'unified' ? 'bg-white text-brand-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'unified' ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                     title={t('diff-viewer.unified_view')}
                 >
                     <FileDiff size={16} />
@@ -147,7 +147,7 @@ export const DiffViewer: React.FC = () => {
                 </button>
                 <button
                     onClick={() => setViewMode('split')}
-                    className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'split' ? 'bg-white text-brand-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'split' ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                     title={t('diff-viewer.split_view')}
                 >
                     <Columns size={16} />
@@ -160,46 +160,46 @@ export const DiffViewer: React.FC = () => {
       {/* Input Area */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 h-full">
-            <span className="text-xs font-semibold text-slate-500 uppercase flex justify-between sticky top-[60px] z-10 bg-slate-50/80 backdrop-blur py-1 rounded">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase flex justify-between sticky top-[60px] z-10 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur py-1 rounded transition-colors">
                 <span>{t('diff-viewer.original_text')}</span>
-                <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">{t('diff-viewer.input_a')}</span>
+                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 dark:text-slate-500 font-normal transition-colors">{t('diff-viewer.input_a')}</span>
             </span>
             <CodeEditor
                 value={left}
                 onChange={setLeft}
                 language={method === 'json' ? 'json' : 'text'}
-                className="w-full flex-1 border border-slate-200 rounded-xl shadow-sm bg-white min-h-[300px]"
+                className="w-full flex-1 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm bg-white dark:bg-slate-900 min-h-[300px] overflow-hidden transition-colors"
                 placeholder={t('diff-viewer.paste_original')}
             />
         </div>
         <div className="flex flex-col gap-2 h-full">
-            <span className="text-xs font-semibold text-slate-500 uppercase flex justify-between sticky top-[60px] z-10 bg-slate-50/80 backdrop-blur py-1 rounded">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase flex justify-between sticky top-[60px] z-10 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur py-1 rounded transition-colors">
                  <span>{t('diff-viewer.changed_text')}</span>
-                 <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-400 font-normal">{t('diff-viewer.input_b')}</span>
+                 <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 dark:text-slate-500 font-normal transition-colors">{t('diff-viewer.input_b')}</span>
             </span>
              <CodeEditor
                 value={right}
                 onChange={setRight}
                 language={method === 'json' ? 'json' : 'text'}
-                className="w-full flex-1 border border-slate-200 rounded-xl shadow-sm bg-white min-h-[300px]"
+                className="w-full flex-1 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm bg-white dark:bg-slate-900 min-h-[300px] overflow-hidden transition-colors"
                 placeholder={t('diff-viewer.paste_changed')}
             />
         </div>
       </div>
 
       {/* Result Area */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[200px]">
-        <div className="bg-slate-50 border-b border-slate-100 px-4 py-2 flex items-center justify-between rounded-t-xl sticky top-[60px] z-10">
-            <span className="text-xs font-semibold text-slate-500 uppercase">{t('diff-viewer.comparison_result')}</span>
-            <span className="text-[10px] text-slate-400 font-mono">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col min-h-[200px] transition-colors">
+        <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 px-4 py-2 flex items-center justify-between rounded-t-xl sticky top-[60px] z-10 transition-colors">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">{t('diff-viewer.comparison_result')}</span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                 {diffResult.filter(r => r.added).length} {t('diff-viewer.insertions')}, {diffResult.filter(r => r.removed).length} {t('diff-viewer.deletions')}
             </span>
         </div>
         <div className="p-4">
             {diffResult.length === 0 && (left || right) ? (
-                <span className="text-slate-400 italic text-sm">{t('diff-viewer.computing')}</span>
+                <span className="text-slate-400 dark:text-slate-500 italic text-sm">{t('diff-viewer.computing')}</span>
             ) : !left && !right ? (
-                <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-2">
+                <div className="flex flex-col items-center justify-center p-12 text-slate-400 dark:text-slate-500 gap-2">
                     <FileDiff size={32} className="opacity-20" />
                     <span className="text-sm italic">{t('diff-viewer.empty_state')}</span>
                 </div>

@@ -43,7 +43,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
           icon: Braces,
           priority: 100,
           content: (
-            <pre className="text-xs md:text-sm font-mono text-slate-700 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">
+            <pre className="text-xs md:text-sm font-mono text-slate-700 dark:text-slate-300 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">
               {JSON.stringify(parsed, null, 2)}
             </pre>
           )
@@ -65,7 +65,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                     icon: Database,
                     priority: 95,
                     content: (
-                        <pre className="text-xs md:text-sm font-mono text-slate-700 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">
+                        <pre className="text-xs md:text-sm font-mono text-slate-700 dark:text-slate-300 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">
                             {formatted}
                         </pre>
                     )
@@ -88,17 +88,17 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
           priority: 90,
           content: (
             <div className="space-y-2">
-              <div className="flex justify-between border-b border-slate-100 pb-2">
-                <span className="text-slate-500">ISO 8601</span>
-                <span className="font-mono text-slate-900">{date.toISOString()}</span>
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                <span className="text-slate-500 dark:text-slate-400">ISO 8601</span>
+                <span className="font-mono text-slate-900 dark:text-slate-100">{date.toISOString()}</span>
               </div>
-              <div className="flex justify-between border-b border-slate-100 pb-2">
-                <span className="text-slate-500">Local</span>
-                <span className="font-mono text-slate-900">{date.toLocaleString()}</span>
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                <span className="text-slate-500 dark:text-slate-400">Local</span>
+                <span className="font-mono text-slate-900 dark:text-slate-100">{date.toLocaleString()}</span>
               </div>
                <div className="flex justify-between">
-                <span className="text-slate-500">Relative</span>
-                <span className="font-mono text-slate-900">
+                <span className="text-slate-500 dark:text-slate-400">Relative</span>
+                <span className="font-mono text-slate-900 dark:text-slate-100">
                     {(() => {
                    const diff = Date.now() - date.getTime();
                    const seconds = Math.floor(Math.abs(diff) / 1000);
@@ -128,10 +128,10 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             priority: 95,
             content: (
                 <div className="flex items-center gap-6">
-                    <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-200" style={{ backgroundColor: val }} />
+                    <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors" style={{ backgroundColor: val }} />
                     <div className="space-y-1">
-                        <div className="text-lg font-bold text-slate-900 uppercase">{val}</div>
-                        <div className="text-sm text-slate-500">Valid CSS Color</div>
+                        <div className="text-lg font-bold text-slate-900 dark:text-white uppercase transition-colors">{val}</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 transition-colors">Valid CSS Color</div>
                     </div>
                 </div>
             )
@@ -153,12 +153,12 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 content: (
                      <div className="space-y-4">
                          <div>
-                            <div className="text-xs font-semibold text-slate-500 uppercase mb-1">Header</div>
-                            <pre className="bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-700 overflow-x-auto">{JSON.stringify(header, null, 2)}</pre>
+                            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Header</div>
+                            <pre className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-700 dark:text-slate-300 overflow-x-auto transition-colors">{JSON.stringify(header, null, 2)}</pre>
                          </div>
                          <div>
-                            <div className="text-xs font-semibold text-slate-500 uppercase mb-1">Payload</div>
-                            <pre className="bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-700 overflow-x-auto">{JSON.stringify(payload, null, 2)}</pre>
+                            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Payload</div>
+                            <pre className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-700 dark:text-slate-300 overflow-x-auto transition-colors">{JSON.stringify(payload, null, 2)}</pre>
                          </div>
                     </div>
                 )
@@ -177,7 +177,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                     label: t('quick-preview.labels.url'),
                     icon: Link,
                     priority: 80,
-                    content: <div className="break-all font-mono text-slate-900">{decoded}</div>
+                    content: <div className="break-all font-mono text-slate-900 dark:text-slate-100 transition-colors">{decoded}</div>
                 });
             }
         } catch(e) {}
@@ -196,7 +196,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                     label: t('quick-preview.labels.unicode'),
                     icon: Languages,
                     priority: 85,
-                    content: <div className="break-all font-mono text-slate-900">{decoded}</div>
+                    content: <div className="break-all font-mono text-slate-900 dark:text-slate-100 transition-colors">{decoded}</div>
                 });
             }
         } catch(e) {}
@@ -214,7 +214,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                     label: t('quick-preview.labels.base64'),
                     icon: Binary,
                     priority: 85,
-                    content: <div className="break-all font-mono text-slate-900">{decoded}</div>
+                    content: <div className="break-all font-mono text-slate-900 dark:text-slate-100 transition-colors">{decoded}</div>
                 });
             }
         } catch(e) {}
@@ -236,17 +236,17 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 priority: 70,
                 content: (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="p-3 bg-slate-50 rounded-lg">
-                            <div className="text-xs text-slate-500 mb-1">Decimal</div>
-                            <div className="font-mono font-medium">{num.toString(10)}</div>
+                        <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg transition-colors">
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Decimal</div>
+                            <div className="font-mono font-medium text-slate-900 dark:text-slate-100">{num.toString(10)}</div>
                         </div>
-                        <div className="p-3 bg-slate-50 rounded-lg">
-                            <div className="text-xs text-slate-500 mb-1">Hexadecimal</div>
-                            <div className="font-mono font-medium">0x{num.toString(16).toUpperCase()}</div>
+                        <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg transition-colors">
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Hexadecimal</div>
+                            <div className="font-mono font-medium text-slate-900 dark:text-slate-100">0x{num.toString(16).toUpperCase()}</div>
                         </div>
-                        <div className="p-3 bg-slate-50 rounded-lg">
-                            <div className="text-xs text-slate-500 mb-1">Binary</div>
-                            <div className="font-mono font-medium">0b{num.toString(2)}</div>
+                        <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg transition-colors">
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Binary</div>
+                            <div className="font-mono font-medium text-slate-900 dark:text-slate-100">0b{num.toString(2)}</div>
                         </div>
                     </div>
                 )
@@ -264,20 +264,20 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         content: (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">{t('quick-preview.stats.characters')}</span>
-                    <span className="font-mono font-medium">{val.length}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors">{t('quick-preview.stats.characters')}</span>
+                    <span className="font-mono font-medium text-slate-900 dark:text-slate-100 transition-colors">{val.length}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">{t('quick-preview.stats.words')}</span>
-                    <span className="font-mono font-medium">{val.trim() ? val.trim().split(/\s+/).length : 0}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors">{t('quick-preview.stats.words')}</span>
+                    <span className="font-mono font-medium text-slate-900 dark:text-slate-100 transition-colors">{val.trim() ? val.trim().split(/\s+/).length : 0}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">{t('quick-preview.stats.lines')}</span>
-                    <span className="font-mono font-medium">{val.split(/\r\n|\r|\n/).length}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors">{t('quick-preview.stats.lines')}</span>
+                    <span className="font-mono font-medium text-slate-900 dark:text-slate-100 transition-colors">{val.split(/\r\n|\r|\n/).length}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">{t('quick-preview.stats.bytes')}</span>
-                    <span className="font-mono font-medium">{new Blob([val]).size}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors">{t('quick-preview.stats.bytes')}</span>
+                    <span className="font-mono font-medium text-slate-900 dark:text-slate-100 transition-colors">{new Blob([val]).size}</span>
                 </div>
             </div>
         )
@@ -293,14 +293,18 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             icon: QrCode,
             priority: 5,
             content: (
-                <div className="flex justify-center p-4 bg-white">
-                    {/* Key forces remount when length changes significantly */}
-                    <QRCode 
-                        key={`qr-${Math.floor(val.length / 100)}`}
-                        value={val.length <= maxQRCodeLength ? val : val.substring(0, maxQRCodeLength)}
-                        size={128}
-                        level="M"
-                    />
+                <div className="flex justify-center py-4">
+                    <div className="p-4 bg-white dark:bg-slate-50 rounded-xl border dark:border-slate-800 shadow-sm aspect-square flex items-center justify-center transition-colors">
+                        {/* Key forces remount when length changes significantly */}
+                        <QRCode 
+                            key={`qr-${Math.floor(val.length / 100)}`}
+                            value={val.length <= maxQRCodeLength ? val : val.substring(0, maxQRCodeLength)}
+                            size={150}
+                            level="M"
+                            bgColor="#ffffff"
+                            fgColor="#000000"
+                        />
+                    </div>
                 </div>
             )
         });
@@ -316,14 +320,14 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
         content: (
             <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                    <span className="w-16 text-xs text-slate-500">MD5</span>
-                    <code className="flex-1 bg-slate-50 px-2 py-1 rounded text-xs font-mono text-slate-700 break-all">
+                    <span className="w-16 text-xs text-slate-500 dark:text-slate-400">MD5</span>
+                    <code className="flex-1 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded text-xs font-mono text-slate-700 dark:text-slate-300 break-all transition-colors">
                         {CryptoJS.MD5(val).toString()}
                     </code>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className="w-16 text-xs text-slate-500">SHA-256</span>
-                    <code className="flex-1 bg-slate-50 px-2 py-1 rounded text-xs font-mono text-slate-700 break-all">
+                    <span className="w-16 text-xs text-slate-500 dark:text-slate-400">SHA-256</span>
+                    <code className="flex-1 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded text-xs font-mono text-slate-700 dark:text-slate-300 break-all transition-colors">
                         {CryptoJS.SHA256(val).toString()}
                     </code>
                 </div>
@@ -336,12 +340,12 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
   }, [input, t]);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-12 py-12">
+    <div className="max-w-3xl mx-auto space-y-12 py-12 transition-colors">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight transition-colors">
           {t('quick-preview.title')}
         </h1>
-        <p className="text-lg text-slate-500 max-w-xl mx-auto">
+        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto transition-colors">
           {t('quick-preview.subtitle')}
         </p>
       </div>
@@ -353,12 +357,12 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t('quick-preview.placeholder')}
-                className="relative w-full h-32 md:h-40 p-6 rounded-xl bg-white border border-slate-200 shadow-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 text-lg font-mono resize-none"
+                className="relative w-full h-32 md:h-40 p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 text-lg font-mono resize-none transition-colors"
             />
              {input && (
                 <button 
                   onClick={() => setInput('')} 
-                  className="absolute top-4 right-4 text-xs text-slate-400 hover:text-slate-600 bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm"
+                  className="absolute top-4 right-4 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 bg-white dark:bg-slate-800 px-2 py-1 rounded-md border border-slate-100 dark:border-slate-700 shadow-sm transition-colors"
                 >
                   {t('quick-preview.clear')}
                 </button>
@@ -370,11 +374,11 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {results.length > 0 ? (
                     results.map((res) => (
-                        <div key={res.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                        <div key={res.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
+                            <div className="bg-slate-50 dark:bg-slate-800/50 px-4 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between transition-colors">
                                 <div className="flex items-center gap-2">
-                                    <res.icon size={16} className="text-brand-600" />
-                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                    <res.icon size={16} className="text-brand-600 dark:text-brand-400" />
+                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 transition-colors">
                                         {res.label}
                                     </span>
                                 </div>
@@ -385,7 +389,7 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
                         </div>
                     ))
                 ) : (
-                    <div className="text-slate-400 text-sm italic text-center py-4">
+                    <div className="text-slate-400 dark:text-slate-600 text-sm italic text-center py-4 transition-colors">
                         {t('quick-preview.no-format')}
                     </div>
                 )}
@@ -421,11 +425,11 @@ export const QuickPreview: React.FC<{ onSelectTool: (id: any) => void }> = ({ on
 const QuickLink: React.FC<{ icon: any, label: string, onClick: () => void }> = ({ icon: Icon, label, onClick }) => (
     <button 
         onClick={onClick}
-        className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-white hover:border-brand-200 hover:shadow-md hover:-translate-y-0.5 transition-all text-left group"
+        className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-200 dark:hover:border-brand-500 hover:shadow-md hover:-translate-y-0.5 transition-all text-left group"
     >
-        <div className="p-2 bg-slate-50 text-slate-500 rounded-lg group-hover:bg-brand-50 group-hover:text-brand-600 transition-colors">
+        <div className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-lg group-hover:bg-brand-50 dark:group-hover:bg-brand-500/10 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
             <Icon size={20} />
         </div>
-        <span className="font-medium text-slate-600 group-hover:text-slate-900">{label}</span>
+        <span className="font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{label}</span>
     </button>
 )
