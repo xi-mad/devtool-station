@@ -86,7 +86,9 @@
   },
   "timestamp": {
     "current_unix_timestamp": "Current Unix Timestamp",
+    "current_unix_timestamp_ms": "Current Unix Timestamp (ms)",
     "seconds_since_epoch": "Seconds since Jan 01 1970",
+    "ms_since_epoch": "Milliseconds since Jan 01 1970",
     "copy": "Copy",
     "converter": "Converter",
     "unix_timestamp_label": "Unix Timestamp (Seconds or MS)",

@@ -86,7 +86,9 @@
   },
   "timestamp": {
     "current_unix_timestamp": "当前 Unix 时间戳",
+    "current_unix_timestamp_ms": "当前 Unix 时间戳 (毫秒)",
     "seconds_since_epoch": "自 1970 年 1 月 1 日起的秒数",
+    "ms_since_epoch": "自 1970 年 1 月 1 日起的毫秒数",
     "copy": "复制",
     "converter": "转换器",
     "unix_timestamp_label": "Unix 时间戳 (秒或毫秒)",

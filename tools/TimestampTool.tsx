@@ -6,15 +6,19 @@ import { useTranslation } from 'react-i18next';
 export const TimestampTool: React.FC = () => {
   const { t } = useTranslation();
   const [now, setNow] = useState(Math.floor(Date.now() / 1000));
+  const [nowMs, setNowMs] = useState(Date.now());
   const [inputTs, setInputTs] = useState<string>(Math.floor(Date.now() / 1000).toString());
   const [inputDate, setInputDate] = useState<string>(new Date().toISOString());
   const { copy, isCopied } = useCopy();
+  const { copy: copyMs, isCopied: isMsCopied } = useCopy();
 
-  // Update "Now" every second
+  // Update "Now" frequently for milliseconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setNow(Math.floor(Date.now() / 1000));
-    }, 1000);
+      const time = Date.now();
+      setNow(Math.floor(time / 1000));
+      setNowMs(time);
+    }, 50);
     return () => clearInterval(interval);
   }, []);
 
@@ -37,8 +41,8 @@ export const TimestampTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-3xl mx-auto">
-      {/* Current Time Card */}
+    <div className="space-y-6 max-w-3xl mx-auto">
+      {/* Current Time Card (Seconds) */}
       <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-brand-50 text-brand-600 rounded-full">
@@ -59,6 +63,31 @@ export const TimestampTool: React.FC = () => {
             title={t('timestamp.copy')}
           >
             {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Current Time Card (Milliseconds) */}
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-brand-50 text-brand-600 rounded-full">
+            <Clock size={24} />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">{t('timestamp.current_unix_timestamp_ms')}</h3>
+            <p className="text-slate-500 text-sm">{t('timestamp.ms_since_epoch')}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <code className="text-2xl font-mono font-bold text-slate-800 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+            {nowMs}
+          </code>
+          <button 
+            onClick={() => copyMs(nowMs.toString())}
+            className="p-3 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+            title={t('timestamp.copy')}
+          >
+            {isMsCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
           </button>
         </div>
       </div>
