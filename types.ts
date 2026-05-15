@@ -25,6 +25,7 @@ export interface ToolDefinition {
   name: string;
   description: string;
   icon: React.ComponentType<{ className?: string; size?: number | string }>;
+  component: React.ComponentType<any>;
   category: 'Converter' | 'Formatter' | 'Generator' | 'General';
 }
 

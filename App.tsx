@@ -1,28 +1,9 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
-import { TOOLS } from './components/Sidebar'; // Importing definition
+import { TOOLS } from './components/Sidebar';
 import { Layout } from './components/ui/Layout';
 import { ToolId } from './types';
 import { useTranslation } from 'react-i18next';
-
-// Tools
-import { QuickPreview } from './tools/QuickPreview';
-import { JsonFormatter } from './tools/JsonFormatter';
-import { DiffViewer } from './tools/DiffViewer';
-import { Base64Tool } from './tools/Base64Tool';
-import { UrlEncoder } from './tools/UrlEncoder';
-import { TimestampTool } from './tools/TimestampTool';
-import { TextInspector } from './tools/TextInspector';
-import { ColorTool } from './tools/ColorTool';
-import { UuidGenerator } from './tools/UuidGenerator';
-import { HashGenerator } from './tools/HashGenerator';
-import { NumberBase } from './tools/NumberBase';
-import { SqlFormatter } from './tools/SqlFormatter';
-import { RandomStringGenerator } from './tools/RandomStringGenerator';
-import { UnicodeConverter } from './tools/UnicodeConverter';
-import { FullscreenColor } from './tools/FullscreenColor';
-import { JwtDecoder } from './tools/JwtDecoder';
-import { QrCodeGenerator } from './tools/QrCodeGenerator';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -31,36 +12,22 @@ const App: React.FC = () => {
   const activeToolDef = TOOLS.find(t => t.id === activeToolId);
 
   const renderTool = () => {
-    switch (activeToolId) {
-      case ToolId.QUICK_PREVIEW: return <QuickPreview onSelectTool={setActiveToolId} />;
-      case ToolId.JSON_FORMATTER: return <JsonFormatter />;
-      case ToolId.DIFF_VIEWER: return <DiffViewer />;
-      case ToolId.BASE64: return <Base64Tool />;
-      case ToolId.URL_ENCODER: return <UrlEncoder />;
-      case ToolId.TIMESTAMP: return <TimestampTool />;
-      case ToolId.TEXT_INSPECTOR: return <TextInspector />;
-      case ToolId.COLOR_PALETTE: return <ColorTool />;
-      case ToolId.UUID_GENERATOR: return <UuidGenerator />;
-      case ToolId.HASH_GENERATOR: return <HashGenerator />;
-      case ToolId.NUMBER_BASE: return <NumberBase />;
-      case ToolId.SQL_FORMATTER: return <SqlFormatter />;
-      case ToolId.RANDOM_STRING: return <RandomStringGenerator />;
-      case ToolId.UNICODE_CONVERTER: return <UnicodeConverter />;
-      case ToolId.FULLSCREEN_COLOR: return <FullscreenColor />;
-      case ToolId.JWT_DECODER: return <JwtDecoder />;
-      case ToolId.QR_CODE_GENERATOR: return <QrCodeGenerator />;
-      default: return <QuickPreview onSelectTool={setActiveToolId} />;
+    if (!activeToolDef) return null;
+    const Component = activeToolDef.component;
+    if (activeToolId === ToolId.QUICK_PREVIEW) {
+      return <Component onSelectTool={setActiveToolId} />;
     }
+    return <Component />;
   };
 
   return (
     <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300">
-      <Navbar 
-        activeTool={activeToolId} 
-        onSelectTool={setActiveToolId} 
+      <Navbar
+        activeTool={activeToolId}
+        onSelectTool={setActiveToolId}
       />
-      
-      <Layout 
+
+      <Layout
         title={activeToolId !== ToolId.QUICK_PREVIEW ? t(`tools.${activeToolId}.name`) : undefined}
         description={activeToolId !== ToolId.QUICK_PREVIEW ? t(`tools.${activeToolId}.description`) : undefined}
       >
