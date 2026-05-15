@@ -4,41 +4,43 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DevTool Station is a single-page React developer toolkit with 17 utility tools. Built with Vite + React 19 + TypeScript, styled with Tailwind CSS (CDN), and uses Monaco Editor for code editing surfaces.
+DevTool Station is a single-page React developer toolkit with 17 utility tools. Built with Vite + React 19 + TypeScript, styled with Tailwind CSS v4 (via @tailwindcss/vite), Monaco Editor for code editing, and i18next for i18n (en/zh).
 
 ## Development Commands
 
 - `npm run dev` — Start dev server at `http://127.0.0.1:3000`
 - `npm run build` — Production build to `dist/`
 - `npm run preview` — Preview the production build locally
+- `npm run typecheck` — Run `tsc --noEmit` for type checking
 
-There is no test runner, linter, or type-check script currently configured. The repo has no lock file committed; CI previously used Bun.
+There is no test runner or linter currently configured.
 
 ## Entry Point & Bootstrap
 
 The entry point is `index.tsx` (not the Vite default `main.tsx`). It mounts `<App />` into `#root` with `React.StrictMode`.
 
-`index.html` loads Tailwind via CDN script tag with `darkMode: 'class'`, defines custom `brand` colors, and sets Inter + JetBrains Mono fonts. It also has a CDN importmap mapping several packages (`react`, `react-dom`, `lucide-react`, `diff`, `@google/genai`) to `aistudiocdn.com`.
+`index.html` loads Inter + JetBrains Mono fonts from Google Fonts and has a CDN importmap mapping several packages (`react`, `react-dom`, `lucide-react`, `diff`, `@google/genai`) to `aistudiocdn.com`.
+
+`index.css` is the Tailwind CSS v4 entry point, imported by `index.tsx`. Custom theme tokens (brand colors, fonts) and `@custom-variant dark` for class-based dark mode are defined here.
 
 ## Architecture
 
 ### App Shell & Tool Switching
 
-`App.tsx` is the central router. It maintains `activeToolId` state and renders tools via a switch statement. Navbar receives `onSelectTool` to change tools.
+`App.tsx` is the central router. It maintains `activeToolId` state and renders tools dynamically by looking up the component from the `TOOLS` registry. Navbar receives `onSelectTool` to change tools.
 
 **Key players:**
-- `types.ts` — `ToolId` enum (17 values) and `ToolDefinition` interface (id, name, description, icon, category)
-- `components/Sidebar.tsx` — Exports the `TOOLS` array (all tool definitions) and a deprecated null `Sidebar` component. This is the single source of truth for tool metadata.
-- `components/Navbar.tsx` — Renders category dropdowns from `TOOLS`, language switcher (en/zh), and theme toggle.
-- `components/ui/Layout.tsx` — Page wrapper; renders optional title/description then `children`.
+- `types.ts` — `ToolId` enum (17 values) and `ToolDefinition` interface (id, name, description, icon, component, category)
+- `toolDefinitions.ts` — The `TOOLS` array: single source of truth for tool metadata and component registration
+- `components/Navbar.tsx` — Renders category dropdowns from `TOOLS`, language switcher (en/zh), and theme toggle
+- `components/ui/Layout.tsx` — Page wrapper; renders optional title/description then `children`
 
 ### Adding a New Tool
 
-Must touch exactly 4 files:
+Must touch exactly 3 files:
 1. Create `tools/NewTool.tsx`
 2. Add entry to `ToolId` enum in `types.ts`
-3. Add `ToolDefinition` to `TOOLS` array in `components/Sidebar.tsx`
-4. Add `case` and import in `App.tsx`
+3. Add `ToolDefinition` with component import to `TOOLS` array in `toolDefinitions.ts`
 
 ### Shared Components
 
@@ -56,7 +58,7 @@ Uses i18next with `LanguageDetector` for automatic language detection. Two local
 
 ### Styling
 
-Tailwind CSS loaded via CDN (not a build dependency). Dark mode uses the `class` strategy — all dark variants use `dark:` prefix. Custom `brand` color palette (50–900) and custom font families (Inter for sans, JetBrains Mono for mono). Custom scrollbar styles inlined in `<style>`.
+Tailwind CSS v4 with `@tailwindcss/vite` plugin. Dark mode uses the `class` strategy via `@custom-variant dark`. Custom `brand` color palette (50–900), Inter sans font, JetBrains Mono for code. Custom scrollbar styles in `index.css`.
 
 ### Build Configuration
 
