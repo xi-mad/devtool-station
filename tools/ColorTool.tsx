@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Copy, Check } from 'lucide-react';
-import { useCopy } from '../hooks/useCopy';
 import { useTranslation } from 'react-i18next';
+import { CopyButton } from '../components/ui/CopyButton';
 
 // Helpers
 const hexToRgb = (hex: string) => {
@@ -69,8 +69,6 @@ export const ColorTool: React.FC = () => {
   const { t } = useTranslation();
   const [hex, setHex] = useState('#3b82f6');
   const [rgb, setRgb] = useState({ r: 59, g: 130, b: 246 });
-  const { copy, isCopied } = useCopy();
-
   const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setHex(val);
@@ -118,12 +116,13 @@ export const ColorTool: React.FC = () => {
                 onChange={handleHexChange}
                 className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg font-mono uppercase bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors"
                 />
-                <button 
-                    onClick={() => copy(hex, hex)}
+                <CopyButton
+                    text={hex}
+                    copyKey="hex-color"
                     className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
                 >
-                    {isCopied(hex) ? <Check size={20} className="text-green-600"/> : <Copy size={20} />}
-                </button>
+                    {(copied) => <>{copied ? <Check size={20} className="text-green-600"/> : <Copy size={20} />}</>}
+                </CopyButton>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
@@ -141,13 +140,16 @@ export const ColorTool: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">CSS</label>
-             <div 
-                className="bg-slate-50 dark:bg-slate-800 p-2 rounded-lg font-mono text-sm text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 select-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex justify-between items-center"
-                onClick={() => copy(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`, `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}
+             <CopyButton
+                text={`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`}
+                copyKey="css-rgb"
+                className="bg-slate-50 dark:bg-slate-800 p-2 rounded-lg font-mono text-sm text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 select-all cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex justify-between items-center w-full"
              >
-                {`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`}
-                {isCopied(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`) ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="opacity-50" />}
-             </div>
+                {(copied) => <>
+                    {`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`}
+                    {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="opacity-50" />}
+                </>}
+             </CopyButton>
           </div>
         </div>
       </div>
@@ -158,22 +160,24 @@ export const ColorTool: React.FC = () => {
         <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
             <div className="grid grid-cols-5 sm:grid-cols-11 gap-2">
                 {Object.entries(generatedPalette).map(([weight, color]) => (
-                    <div key={weight} className="flex flex-col gap-1 group cursor-pointer" onClick={() => copy(color, color)}>
-                        <div 
-                            className="w-full aspect-square rounded-md shadow-sm border border-black/5 relative overflow-hidden transition-transform group-hover:scale-105"
-                            style={{ backgroundColor: color }}
-                        >
-                            {isCopied(color) && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/10 text-white">
-                                    <Check size={16} />
-                                </div>
-                            )}
-                        </div>
-                        <div className="text-center">
-                            <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">{weight}</div>
-                            <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase hidden sm:block">{(color as string).replace('#', '')}</div>
-                        </div>
-                    </div>
+                    <CopyButton key={weight} text={color as string} copyKey={`palette-${weight}`} className="flex flex-col gap-1 group cursor-pointer w-full">
+                        {(copied) => <>
+                            <div
+                                className="w-full aspect-square rounded-md shadow-sm border border-black/5 relative overflow-hidden transition-transform group-hover:scale-105"
+                                style={{ backgroundColor: color as string }}
+                            >
+                                {copied && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 text-white">
+                                        <Check size={16} />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="text-center">
+                                <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">{weight}</div>
+                                <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase hidden sm:block">{(color as string).replace('#', '')}</div>
+                            </div>
+                        </>}
+                    </CopyButton>
                 ))}
             </div>
         </div>

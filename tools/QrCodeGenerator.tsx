@@ -1,17 +1,20 @@
 import React, { useState, useRef } from 'react';
 import QRCode from 'react-qr-code';
 import { QrCode, Download, Copy, Check, Trash2, Settings } from 'lucide-react';
-import { useCopy } from '../hooks/useCopy';
 import { useTranslation } from 'react-i18next';
+import { CopyButton } from '../components/ui/CopyButton';
+import { SectionHeader } from '../components/ui/SectionHeader';
+import { TwoColumnLayout } from '../components/ui/TwoColumnLayout';
+import { ResultPanel } from '../components/ui/ResultPanel';
+import { SliderInput } from '../components/ui/SliderInput';
 
 export const QrCodeGenerator: React.FC = () => {
   const { t } = useTranslation();
-  const maxLength = 2000; // Maximum characters for QR code
+  const maxLength = 2000;
   const [text, setText] = useState('https://example.com');
   const [size, setSize] = useState(256);
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
-  const { copy, isCopied } = useCopy();
   const qrRef = useRef<HTMLDivElement>(null);
 
   const downloadQr = () => {
@@ -52,13 +55,12 @@ export const QrCodeGenerator: React.FC = () => {
   const isNearLimit = text.length > maxLength * 0.9;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-180px)] transition-colors">
-      {/* Configuration Panel */}
-      <div className="w-full lg:w-80 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
-         <div className="flex items-center gap-2 p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 transition-colors">
-           <Settings className="text-slate-400 dark:text-slate-500" size={20} />
-           <h3 className="font-semibold text-slate-900 dark:text-white">{t('qr-code.configuration')}</h3>
-        </div>
+    <TwoColumnLayout
+      sidebarWidth="w-80"
+      breakpoint="lg"
+      sidebar={
+        <>
+         <SectionHeader icon={Settings} title={t('qr-code.configuration')} className="p-4 [&_h3]:text-slate-900 [&_h3]:dark:text-white" />
 
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <div>
@@ -86,7 +88,7 @@ export const QrCodeGenerator: React.FC = () => {
                   {text.length} / {maxLength} {t('qr-code.characters')}
                   {isOverLimit && ` - ⚠️ ${t('qr-code.limit_exceeded')}`}
                 </div>
-                <button 
+                <button
                     onClick={() => setText('')}
                     className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1"
                 >
@@ -95,18 +97,14 @@ export const QrCodeGenerator: React.FC = () => {
              </div>
           </div>
 
-          <div>
-             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('qr-code.size')}: {size}px</label>
-             <input 
-                type="range" 
-                min="128" 
-                max="512" 
-                step="8"
-                value={size} 
-                onChange={(e) => setSize(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-600 transition-colors"
-             />
-          </div>
+          <SliderInput
+            label={`${t('qr-code.size')}: ${size}px`}
+            value={size}
+            min={128}
+            max={512}
+            step={8}
+            onChange={setSize}
+          />
 
           <div className="grid grid-cols-2 gap-4">
               <div>
@@ -135,10 +133,10 @@ export const QrCodeGenerator: React.FC = () => {
               </div>
           </div>
         </div>
-      </div>
-
-      {/* Preview Panel */}
-      <div className="flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col min-h-0 overflow-hidden transition-colors">
+        </>
+      }
+    >
+      <ResultPanel>
          <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50 transition-colors">
            <div className="flex items-center gap-2">
              <div className="p-1.5 bg-brand-100 dark:bg-brand-500/10 text-brand-700 dark:text-brand-400 rounded-lg transition-colors">
@@ -147,13 +145,13 @@ export const QrCodeGenerator: React.FC = () => {
              <h3 className="font-semibold text-slate-900 dark:text-white transition-colors">{t('qr-code.preview')}</h3>
            </div>
            <div className="flex gap-2">
-             <button 
-                onClick={() => copy(text)}
-                className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-1.5 rounded-lg hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all font-medium"
+             <CopyButton
+                text={text}
+                copyKey="qr-text"
+                className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-1.5 rounded-lg hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all"
              >
-               {isCopied() ? <Check size={16} /> : <Copy size={16} />}
-               {t('qr-code.copy_text')}
-             </button>
+               {(copied) => <>{copied ? <Check size={16} /> : <Copy size={16} />}{t('qr-code.copy_text')}</>}
+             </CopyButton>
              <button 
                 onClick={downloadQr}
                 className="flex items-center gap-1.5 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 px-3 py-1.5 rounded-lg transition-all shadow-sm"
@@ -196,7 +194,7 @@ export const QrCodeGenerator: React.FC = () => {
               </div>
             )}
          </div>
-      </div>
-    </div>
+      </ResultPanel>
+    </TwoColumnLayout>
   );
 };

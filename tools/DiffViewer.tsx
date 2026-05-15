@@ -3,6 +3,7 @@ import * as Diff from 'diff';
 import { AlertCircle, Columns, FileDiff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { CodeEditor } from '../components/CodeEditor';
+import { ToggleGroup } from '../components/ui/ToggleGroup';
 
 type DiffMethod = 'chars' | 'words' | 'lines' | 'json';
 type ViewMode = 'unified' | 'split';
@@ -136,24 +137,14 @@ export const DiffViewer: React.FC = () => {
                 </div>
             )}
             
-            <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg transition-colors">
-                <button
-                    onClick={() => setViewMode('unified')}
-                    className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'unified' ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
-                    title={t('diff-viewer.unified_view')}
-                >
-                    <FileDiff size={16} />
-                    <span className="text-xs font-medium">{t('diff-viewer.unified')}</span>
-                </button>
-                <button
-                    onClick={() => setViewMode('split')}
-                    className={`p-1.5 rounded-md transition-all flex items-center gap-1.5 ${viewMode === 'split' ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
-                    title={t('diff-viewer.split_view')}
-                >
-                    <Columns size={16} />
-                    <span className="text-xs font-medium">{t('diff-viewer.split')}</span>
-                </button>
-            </div>
+            <ToggleGroup
+              options={[
+                { value: 'unified' as const, label: t('diff-viewer.unified'), icon: <FileDiff size={16} /> },
+                { value: 'split' as const, label: t('diff-viewer.split'), icon: <Columns size={16} /> },
+              ]}
+              value={viewMode}
+              onChange={setViewMode}
+            />
         </div>
       </div>
 

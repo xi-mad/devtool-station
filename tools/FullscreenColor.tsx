@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Maximize2, X, Copy, Check } from 'lucide-react';
-import { useCopy } from '../hooks/useCopy';
 import { useTranslation } from 'react-i18next';
+import { ToolHeader } from '../components/ui/ToolHeader';
+import { CopyButton } from '../components/ui/CopyButton';
 
 export const FullscreenColor: React.FC = () => {
   const { t } = useTranslation();
   const [color, setColor] = useState('#3b82f6');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
-  const { copy, isCopied } = useCopy();
 
   const toggleFullscreen = () => {
     if (!isFullscreen) {
@@ -19,7 +19,6 @@ export const FullscreenColor: React.FC = () => {
     setIsFullscreen(!isFullscreen);
   };
 
-  // Listen for fullscreen changes
   React.useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -28,23 +27,21 @@ export const FullscreenColor: React.FC = () => {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  // Auto-hide controls on mouse inactivity
   React.useEffect(() => {
     if (!isFullscreen) return;
 
     let timeout: NodeJS.Timeout;
-    
+
     const handleMouseMove = () => {
       setShowControls(true);
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         setShowControls(false);
-      }, 3000); // Hide after 3 seconds of inactivity
+      }, 3000);
     };
 
     document.addEventListener('mousemove', handleMouseMove);
-    
-    // Initial timeout
+
     timeout = setTimeout(() => {
       setShowControls(false);
     }, 3000);
@@ -57,11 +54,11 @@ export const FullscreenColor: React.FC = () => {
 
   if (isFullscreen) {
     return (
-      <div 
+      <div
         className="fixed inset-0 z-50 flex items-center justify-center transition-colors duration-300 cursor-none"
         style={{ backgroundColor: color }}
       >
-        <div 
+        <div
           className={`absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/20 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20 transition-opacity duration-300 ${
             showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
@@ -76,13 +73,12 @@ export const FullscreenColor: React.FC = () => {
             <div className="text-2xl font-bold font-mono uppercase">{color}</div>
             <div className="text-sm opacity-80">{t('fullscreen-color.click_to_change')}</div>
           </div>
-          <button
-            onClick={() => copy(color)}
+          <CopyButton
+            text={color}
             className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors cursor-pointer"
-            title={t('fullscreen-color.copy_color')}
           >
-            {isCopied() ? <Check size={20} className="text-white" /> : <Copy size={20} className="text-white" />}
-          </button>
+            {(copied) => <>{copied ? <Check size={20} className="text-white" /> : <Copy size={20} className="text-white" />}</>}
+          </CopyButton>
           <button
             onClick={toggleFullscreen}
             className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors cursor-pointer"
@@ -97,27 +93,19 @@ export const FullscreenColor: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 h-[calc(100vh-180px)] transition-colors">
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-lg">
-            <Maximize2 size={20} />
-          </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">{t('fullscreen-color.title')}</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{t('fullscreen-color.subtitle')}</p>
-          </div>
-        </div>
-      </div>
+      <ToolHeader
+        icon={Maximize2}
+        title={t('fullscreen-color.title')}
+        subtitle={t('fullscreen-color.subtitle')}
+      />
 
       <div className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-2xl space-y-8">
-          {/* Color Preview */}
-          <div 
+          <div
             className="w-full aspect-video rounded-3xl shadow-2xl border-4 border-white transition-colors duration-300"
             style={{ backgroundColor: color }}
           />
 
-          {/* Color Picker */}
           <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 space-y-6 transition-colors">
             <div className="flex items-center gap-6">
               <input
@@ -134,12 +122,12 @@ export const FullscreenColor: React.FC = () => {
                     onChange={(e) => setColor(e.target.value)}
                     className="flex-1 px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg font-mono text-lg uppercase focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors"
                   />
-                  <button
-                    onClick={() => copy(color)}
+                  <CopyButton
+                    text={color}
                     className="p-3 text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"
                   >
-                    {isCopied() ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
-                  </button>
+                    {(copied) => <>{copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}</>}
+                  </CopyButton>
                 </div>
                 <button
                   onClick={toggleFullscreen}
@@ -151,12 +139,11 @@ export const FullscreenColor: React.FC = () => {
               </div>
             </div>
 
-            {/* Quick Colors */}
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">{t('fullscreen-color.quick_colors')}</label>
               <div className="grid grid-cols-8 gap-2">
                 {[
-                  '#ef4444', '#f97316', '#f59e0b', '#eab308', 
+                  '#ef4444', '#f97316', '#f59e0b', '#eab308',
                   '#84cc16', '#22c55e', '#10b981', '#14b8a6',
                   '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1',
                   '#8b5cf6', '#a855f7', '#d946ef', '#ec4899',
