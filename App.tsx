@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
-import { TOOLS } from './components/Sidebar';
+import { TOOLS } from './toolDefinitions';
 import { Layout } from './components/ui/Layout';
 import { ToolId } from './types';
 import { useTranslation } from 'react-i18next';

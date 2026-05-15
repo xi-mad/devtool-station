@@ -1,5 +1,4 @@
-import React from 'react';
-import { ToolId, ToolDefinition } from '../types';
+import { ToolId, ToolDefinition } from './types';
 import {
   Braces,
   GitCompare,
@@ -17,23 +16,23 @@ import {
   Maximize2,
   QrCode
 } from 'lucide-react';
-import { QuickPreview } from '../tools/QuickPreview';
-import { JsonFormatter } from '../tools/JsonFormatter';
-import { SqlFormatter } from '../tools/SqlFormatter';
-import { TimestampTool } from '../tools/TimestampTool';
-import { ColorTool } from '../tools/ColorTool';
-import { Base64Tool } from '../tools/Base64Tool';
-import { HashGenerator } from '../tools/HashGenerator';
-import { UrlEncoder } from '../tools/UrlEncoder';
-import { NumberBase } from '../tools/NumberBase';
-import { DiffViewer } from '../tools/DiffViewer';
-import { TextInspector } from '../tools/TextInspector';
-import { UuidGenerator } from '../tools/UuidGenerator';
-import { RandomStringGenerator } from '../tools/RandomStringGenerator';
-import { UnicodeConverter } from '../tools/UnicodeConverter';
-import { JwtDecoder } from '../tools/JwtDecoder';
-import { QrCodeGenerator } from '../tools/QrCodeGenerator';
-import { FullscreenColor } from '../tools/FullscreenColor';
+import { QuickPreview } from './tools/QuickPreview';
+import { JsonFormatter } from './tools/JsonFormatter';
+import { SqlFormatter } from './tools/SqlFormatter';
+import { TimestampTool } from './tools/TimestampTool';
+import { ColorTool } from './tools/ColorTool';
+import { Base64Tool } from './tools/Base64Tool';
+import { HashGenerator } from './tools/HashGenerator';
+import { UrlEncoder } from './tools/UrlEncoder';
+import { NumberBase } from './tools/NumberBase';
+import { DiffViewer } from './tools/DiffViewer';
+import { TextInspector } from './tools/TextInspector';
+import { UuidGenerator } from './tools/UuidGenerator';
+import { RandomStringGenerator } from './tools/RandomStringGenerator';
+import { UnicodeConverter } from './tools/UnicodeConverter';
+import { JwtDecoder } from './tools/JwtDecoder';
+import { QrCodeGenerator } from './tools/QrCodeGenerator';
+import { FullscreenColor } from './tools/FullscreenColor';
 
 // Central registry of all tools — single source of truth for tool metadata + component
 export const TOOLS: ToolDefinition[] = [
@@ -55,6 +54,3 @@ export const TOOLS: ToolDefinition[] = [
   { id: ToolId.QR_CODE_GENERATOR, name: 'QR Code', description: 'Generate QR Codes', icon: QrCode, component: QrCodeGenerator, category: 'Generator' },
   { id: ToolId.FULLSCREEN_COLOR, name: 'Fullscreen Color', description: 'Display Color Fullscreen', icon: Maximize2, component: FullscreenColor, category: 'Generator' },
 ];
-
-// Deprecated Component
-export const Sidebar: React.FC<any> = () => null;

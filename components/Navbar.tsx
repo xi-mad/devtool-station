@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ToolId } from '../types';
 import { ChevronDown, Zap, Github, RefreshCw, FileEdit, Sparkles, Globe, Sun, Moon } from 'lucide-react';
-import { TOOLS } from './Sidebar';
+import { TOOLS } from '../toolDefinitions';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 
